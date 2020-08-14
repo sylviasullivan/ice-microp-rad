@@ -1,0 +1,6 @@
+*.pdf
+*.mp4
+*.npy
+MidpointNormalize.py
+OLR/olrComp.py
+OLR/olrDist.py
