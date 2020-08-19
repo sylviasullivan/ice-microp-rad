@@ -4,3 +4,7 @@
 MidpointNormalize.py
 OLR/olrComp.py
 OLR/olrDist.py
+CloudSat/__pycache__/
+obs/
+logs/
+*.pyc
