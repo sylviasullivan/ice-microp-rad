@@ -1,10 +1,13 @@
 *.pdf
 *.mp4
 *.npy
+*.txt
 MidpointNormalize.py
+CALIOP_LID.py
 OLR/olrComp.py
 OLR/olrDist.py
 CloudSat/__pycache__/
 obs/
 logs/
 *.pyc
+output/
