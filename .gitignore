@@ -3,10 +3,8 @@
 *.npy
 *.txt
 MidpointNormalize.py
-CALIOP_LID.py
-OLR/olrComp.py
-OLR/olrDist.py
 CloudSat/__pycache__/
+other/
 obs/
 logs/
 *.pyc

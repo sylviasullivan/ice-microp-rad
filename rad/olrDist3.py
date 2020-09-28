@@ -149,5 +149,5 @@ for j in np.arange(2):
 
 
 fig.tight_layout(w_pad=0.2)
-fig.savefig('../output/olr-distribution_115e_novgrid_no2mom.pdf',bbox_inches='tight')
+#fig.savefig('../output/olr-distribution_115e_novgrid_no2mom.pdf',bbox_inches='tight')
 plt.show()

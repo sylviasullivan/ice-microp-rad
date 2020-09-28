@@ -11,10 +11,10 @@ suffix2 = '_PL2'
 basedir = '/scratch/b/b380873/tropic_run5/'
 flx = xr.open_dataset(basedir + 'FLX_icon_tropic_0049' + suffix1 + '.nc')
 pl = flx.plev_2
-#H = np.load('./output/H_1mom' + suffix2 + '.npy')
-H = np.load('./output/H_2mom' + suffix2 + '.npy')
-#H = np.load('./output/H_no2mom' + suffix2 + '.npy')
-#H = np.load('./output/H_novgrid' + suffix2 + '.npy')
+H = np.load('../output/H_1mom' + suffix2 + '.npy')
+#H = np.load('../output/H_2mom' + suffix2 + '.npy')
+#H = np.load('../output/H_no2mom' + suffix2 + '.npy')
+#H = np.load('../output/H_novgrid' + suffix2 + '.npy')
 colors = plt.cm.jet(np.linspace(0,1,24))
 
 fs = 13
@@ -49,5 +49,5 @@ ax[1].tick_params(labelsize=fs)
 #ax[1].legend(fontsize=fs-3,loc='center right')
 fig.suptitle('Daily-median domain-mean heating profiles',fontsize=fs)
 
-fig.savefig('./output/diurnal-heating-rates-2mom.pdf')
+fig.savefig('../output/diurnal-heating-rates-1mom.pdf')
 plt.show()

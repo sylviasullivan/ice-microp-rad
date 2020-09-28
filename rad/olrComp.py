@@ -144,5 +144,5 @@ fig.canvas.mpl_connect('resize_event', resize_colobar)
 plt.colorbar(im,label=r'W m$^{-2}$',cax=cbar_ax)
 
 resize_colobar(None)
-fig.savefig('../output/olr-comparison_115e_novgrid_no2mom.png',bbox_inches='tight')
+#fig.savefig('../output/olr-comparison_115e_novgrid_no2mom.png',bbox_inches='tight')
 plt.show()

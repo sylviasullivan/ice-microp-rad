@@ -158,5 +158,5 @@ print('ICON 2mom from CERES (0h): ' + str(kl_divergence(h[:,0],h[:,3])))
 
 
 fig.tight_layout(w_pad=0.2)
-fig.savefig('../output/olr-distribution_115e.pdf',bbox_inches='tight')
+#fig.savefig('../output/olr-distribution_115e.pdf',bbox_inches='tight')
 plt.show()

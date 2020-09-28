@@ -48,7 +48,7 @@ for i in np.arange(vct_a.shape[0]-1):
     d = (vct_a[i] + vct_a[i+1])/2
     diff4[i,1] = d[0]
 
-vgrid = xr.open_dataset('/scratch/b/b380873/vgrid_test/' + 'vgrid_DOM01.nc') #vgrid_max_lay_thckn_200.nc')
+vgrid = xr.open_dataset('/scratch/b/b380873/tropic_run5/vgrid_DOM01.nc') #vgrid_max_lay_thckn_200.nc')
 vct_a = vgrid['vct_a'].values
 diff5 = np.zeros((vct_a.shape[0]-1,2))
 for i in np.arange(vct_a.shape[0]-1):
