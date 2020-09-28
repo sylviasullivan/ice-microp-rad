@@ -1,6 +1,5 @@
 # conda activate pyhdf
 from CloudSat_read import read_cloudsatcalipso_hdf_file
-from z_from_ml import z_from_ml
 from matplotlib import cm
 from scipy.interpolate import CubicSpline
 import xarray as xr
@@ -10,125 +9,145 @@ import numpy as np
 from datetime import datetime,timedelta
 import sys,time
 
-basedir = 'obs/2C-ICE/'
+basedir = '/work/bb1131/b380873/tropic_vis/obs/2C-ICE/'
 writenpy = True
-#modeltimestep = '0043'
-#modeltimestep = '0066'
-modeltimestep = '0067'  #'0068'
-#modeltimestep = '0079'
-# All file names at bottom
-#fi = '2017219064524_59987_CS_2C-ICE_GRANULE_P1_R05_E06_F01.hdf'
-#fi = '2017220054945_60001_CS_2C-ICE_GRANULE_P1_R05_E06_F01.hdf'
-fi = '2017220072838_60002_CS_2C-ICE_GRANULE_P1_R05_E06_F01.hdf'
-#fi = '2017220190049_60009_CS_2C-ICE_GRANULE_P1_R05_E06_F01.hdf'
-var = 'IWC'
-var2 = 're'
-var3 = 'EXT_coef'
+# Which model timesteps are being used for comparison?
+dt1 = '0043'
+dt2 = '0066'
 
-iwc, h, lon, lat, zeit = read_cloudsatcalipso_hdf_file(basedir + fi,var)
-# lon runs from 180 to -180
-re, _, _, _, _ = read_cloudsatcalipso_hdf_file(basedir + fi,var2)
-ext,_, _, _, _ = read_cloudsatcalipso_hdf_file(basedir + fi,var3)
-# lon, lat are arrays
+# All CloudSat filenames are at the bottom.
+fi1 = '2017219064524_59987_CS_2C-ICE_GRANULE_P1_R05_E06_F01.hdf'
+fi2 = '2017220054945_60001_CS_2C-ICE_GRANULE_P1_R05_E06_F01.hdf'
+var = 'IWC'
+
+# To read in effective radius, replace iwc with re and 'var' with 're'.
+# Extinction is also available in the CloudSat files.
+# Longitudes run from 180 to -180. lon and lat are arrays.
 # dat = (37082,125), lon/lat = (37082,1)
+iwc1, h1, lon1, lat1, zeit1 = read_cloudsatcalipso_hdf_file(basedir + fi1,var)
+iwc2, h2, lon2, lat2, zeit2 = read_cloudsatcalipso_hdf_file(basedir + fi2,var)
+#print(type(zeit1))
+#print(type(lon1))
 
 # Find the data in the Asian monsoon region.
-ii = np.argwhere((lon > 70) & (lon <= 100) & (lat > 5) & (lat <= 35))
-zeit    = np.asarray(zeit)
-t_AMA   = zeit[ii[:,0]]
+ii1 = np.argwhere((lon1 > 70) & (lon1 <= 100) & (lat1 > 5) & (lat1 <= 35))
+zeit1 = np.asarray(zeit1)
+t_AMA1 = zeit1[ii1[:,0]]
+ii2 = np.argwhere((lon2 > 70) & (lon2 <= 100) & (lat2 > 5) & (lat2 <= 35))
+zeit2 = np.asarray(zeit2)
+t_AMA2 = zeit2[ii2[:,0]]
 
-# Create datetimes from the t_AMA values above, assuming they are seconds after start.
+# Create datetimes from the t_AMA values above. Values are seconds after start.
 startyr = datetime(2017,1,1,0,0,0)
-startda = startyr + timedelta(days=int(fi[4:7]),hours=int(fi[7:9]),minutes=int(fi[9:11]),seconds=int(fi[11:13]))
-da = np.array([startda + timedelta(seconds=i[0]) for i in t_AMA])
+startda = startyr + timedelta(days=int(fi1[4:7]),hours=int(fi1[7:9]),minutes=int(fi1[9:11]),seconds=int(fi1[11:13]))
+da1 = np.array([startda + timedelta(seconds=i[0]) for i in t_AMA1])
+startda = startyr + timedelta(days=int(fi2[4:7]),hours=int(fi2[7:9]),minutes=int(fi2[9:11]),seconds=int(fi2[11:13]))
+da2 = np.array([startda + timedelta(seconds=i[0]) for i in t_AMA2])
 
-h_AMA   = h[ii[:,0]]   # (3111,125)
-iwc_AMA = iwc[ii[:,0]]
-re_AMA  = re[ii[:,0]]
-ext_AMA = ext[ii[:,0]]
-ll_AMA  = np.stack((lat[ii[:,0]],lon[ii[:,0]]))[:,:,0]   # (2,1918)
+h_AMA1   = h1[ii1[:,0]]   # (3111,125)
+iwc_AMA1 = iwc1[ii1[:,0]]
+ll_AMA1  = np.stack((lat1[ii1[:,0]],lon1[ii1[:,0]]))[:,:,0]   # (2,1918)
+h_AMA2   = h2[ii2[:,0]]
+iwc_AMA2 = iwc2[ii2[:,0]]
+ll_AMA2  = np.stack((lat2[ii2[:,0]],lon2[ii2[:,0]]))[:,:,0]
 
 # Print out typical bounds of the data.
-print('Time min, max: ' + str(np.nanmin(t_AMA)) + ' ' + str(np.nanmax(t_AMA)))
-print('IWC min, mean, max: ' + str(np.nanmin(iwc_AMA)) + ' ' + str(np.nanmean(iwc_AMA)) + ' ' + str(np.nanmax(iwc_AMA)))
-print('reff min, mean, max: ' + str(np.nanmin(re_AMA)) + ' ' + str(np.nanmean(re_AMA)) + ' ' + str(np.nanmax(re_AMA)))
+print('Time 1 min, max: ' + str(np.nanmin(t_AMA1)) + ' ' + str(np.nanmax(t_AMA1)))
+print('IWC 1 min, mean, max: ' + str(np.nanmin(iwc_AMA1)) + ' ' + str(np.nanmean(iwc_AMA1)) + ' ' + str(np.nanmax(iwc_AMA1)))
+print('Time 2 min, max: ' + str(np.nanmin(t_AMA2)) + ' ' + str(np.nanmax(t_AMA2)))
+print('IWC 2 min, mean, max: ' + str(np.nanmin(iwc_AMA2)) + ' ' + str(np.nanmean(iwc_AMA2)) + ' ' + str(np.nanmax(iwc_AMA2)))
 
 # Create the coordinate mesh and convert from m to km for the height coordinate.
-xx, yy  = np.meshgrid(np.arange(ii.shape[0]),h_AMA[0])
-yy = yy/1000.
+xx1, yy1 = np.meshgrid(np.arange(ii1.shape[0]),h_AMA1[0])
+yy1 = yy1/1000.
+xx2, yy2 = np.meshgrid(np.arange(ii2.shape[0]),h_AMA2[0])
+yy2 = yy2/1000.
 
 fs = 12
 fig, ax = plt.subplots(nrows=4,ncols=1,figsize=(14,6.5))
 # Plot only non-zero values.
-iwc_AMA_pos = iwc_AMA
-iwc_AMA_pos[iwc_AMA_pos <= 0] = np.nan
+iwc_AMA1[iwc_AMA1 <= 0] = np.nan
 levels = np.logspace(-3,1,10)
-c = ax[0].contourf(xx,yy,iwc_AMA_pos.T,norm=colors.LogNorm(),levels=levels,cmap=cm.Blues)
+c = ax[0].contourf(xx1,yy1,iwc_AMA1.T,norm=colors.LogNorm(),levels=levels,cmap=cm.Blues)
 ax[0].set_ylabel('Height [km]',fontsize=fs)
 ax[0].set_ylim([2,20])
 plt.colorbar(c,label=r'IWC [g m$^{-3}$]',ax=ax[0],ticks=[0.001,0.01,0.1,1,10])
 
-re_AMA_pos = re_AMA
-re_AMA_pos[re_AMA_pos <= 0] = np.nan
-c = ax[2].contourf(xx,yy,re_AMA_pos.T,cmap=cm.Reds)
+iwc_AMA2[iwc_AMA2 <= 0] = np.nan
+c = ax[2].contourf(xx2,yy2,iwc_AMA2.T,norm=colors.LogNorm(),levels=levels,cmap=cm.Greens)
 ax[2].set_ylabel('Height [km]',fontsize=fs)
 ax[2].set_ylim([2,20])
-plt.colorbar(c,label=r'$r_e$ [$\mu$m]',ax=ax[2])
-
-ext_AMA_pos = ext_AMA
-ext_AMA_pos[ext_AMA_pos <= 0] = np.nan
-c = ax[3].contourf(xx,yy,ext_AMA_pos.T,cmap=cm.Greens,norm=colors.LogNorm())
-ax[3].set_ylabel('Height [km]',fontsize=fs)
-ax[3].set_xlabel('Scan number',fontsize=fs)
-ax[3].set_ylim([2,20])
-plt.colorbar(c,label=r'$\epsilon_i$',ax=ax[3])
+plt.colorbar(c,label=r'IWC [g m$^{-3}$]',ax=ax[2],ticks=[0.001,0.01,0.1,1,10])
 
 # Pull the simulated profile 2017-08-07 7:00:00 UTC (43 hours after start + 5 hour time diff)
 if writenpy == True:
-   fi_icon = xr.open_dataset('../tropic_run2_output/CLCONV_3D_icon_tropic_' + modeltimestep + '_remapdis_global0.025.nc')
-   lat_icon = fi_icon.lat
-   lon_icon = fi_icon.lon
+   basedir = '/work/bb1131/b380873/tropic_run5_output/'
+   fi_icon1 = xr.open_dataset(basedir + 'CLCONV_3D_icon_tropic_' + dt1 + '_remapdis_0.025_HL.nc')
+   fi_icon2 = xr.open_dataset(basedir + 'CLCONV_3D_icon_tropic_' + dt2 + '_remapdis_0.025_HL.nc')
+   lat_icon1 = fi_icon1.lat.values
+   lon_icon1 = fi_icon1.lon.values
+   h_AMA1 = fi_icon1.height
+   np.save('height_0043_0066.npy',h_AMA1)
+
    # Make sure the modeled and observed lats and lons are the same range.
-   #print(fi_icon.lat.values,np.nanmax(fi_icon.lat.values))
-   qi_icon = fi_icon.qi.values
-   qi_icon_grid = np.zeros((iwc_AMA.shape[0],105))  # iwc_AMA.shape
-   ll_ICON = np.zeros((ii.shape[0],2))
-   for l in np.arange(ll_AMA.shape[1]):   # 3111
+   qi_icon1 = fi_icon1.qi
+   qs_icon1 = fi_icon1.qs
+   qg_icon1 = fi_icon1.qg
+   qi_icon2 = fi_icon2.qi
+   qs_icon2 = fi_icon2.qs
+   qg_icon2 = fi_icon2.qg
+
+   qice_icon_grid = np.zeros((2,iwc_AMA1.shape[0],120))
+   for l in np.arange(ll_AMA1.shape[1]):
        print(l)
-       lat = ll_AMA[0,l]; lon = ll_AMA[1,l]
-       alt = z_from_ml(lat,lon)
-       # where is the diff between satellite and modeled lat least?
-       oo  = np.abs(lat - lat_icon).argmin()
-       # where is the diff between satellite and modeled lon least?
-       jj = np.abs(lon - lon_icon).argmin()
-       # Store these simulated lat / lon pairs.
-       ll_ICON[l,0] = lat_icon.values[oo]
-       ll_ICON[l,1] = lon_icon.values[jj]
-       #mm = np.argwhere(h_AMA[l] < 0) # mm[0,0] is generally 105
-       spl = CubicSpline(np.flip(alt),np.flip(qi_icon[0,:105,oo,jj])) #,k=3)
-       qi_icon_grid[l] = spl(np.flip(h_AMA[l,:105]))
-       #qi_icon_grid[l] = np.interp(h_AMA[l,:105],alt,qi_icon[0,:105,oo,jj])
-       #qi_icon_grid[l] = qi_icon[0,:,oo,jj]
+       lat1 = ll_AMA1[0,l]; lon1 = ll_AMA1[1,l]
+       # Extract the value for which the diff between satellite and modeled lat / lon is least.
+       v1 = qi_icon1.sel(time=0,lat=lat1,lon=lon1,method='nearest')
+       v2 = qs_icon1.sel(time=0,lat=lat1,lon=lon1,method='nearest')
+       v3 = qg_icon1.sel(time=0,lat=lat1,lon=lon1,method='nearest')
+       qice_icon_grid[0,l] = v1 + v2 + v3
+
+   for l in np.arange(ll_AMA2.shape[1]):
+       print(l)
+       lat1 = ll_AMA2[0,l]; lon1 = ll_AMA2[1,l]
+       # Extract the value for which the diff between satellite and modeled lat / lon is least.
+       v1 = qi_icon2.sel(time=0,lat=lat1,lon=lon1,method='nearest')
+       v2 = qs_icon2.sel(time=0,lat=lat1,lon=lon1,method='nearest')
+       v3 = qg_icon2.sel(time=0,lat=lat1,lon=lon1,method='nearest')
+       qice_icon_grid[1,l] = v1 + v2 + v3
 
    # 1000/1.225 converts kg ice / kg air --> g ice / m3 air
-   qi_icon_grid = qi_icon_grid*1000/1.225
-   qi_icon_pos = qi_icon_grid
+   qice_icon_grid = qice_icon_grid*1000/1.225
    # Filter out noise.
-   qi_icon_pos[qi_icon_pos <= 10**(-7)] = np.nan
-   np.save('qi_icon' + modeltimestep + '_CS' + fi[:19] + '_interp.npy',qi_icon_pos)
+   qice_icon_grid = np.where(qice_icon_grid > 10**(-7),qice_icon_grid,np.nan)
+   print(qice_icon_grid)
+   np.save('qi+qs+qg_icon0043_icon0066_59987_60001.npy',qice_icon_grid)
 else:
-   qi_icon_pos = np.load('qi_icon' + modeltimestep + '_CS' + fi[:19] + '_interp.npy')
-print(ii.shape[0])
-xx1, yy1 = np.meshgrid(np.arange(ii.shape[0]),np.flip(h_AMA[0,:105]))
+   h_AMA1 = np.load('height_0043_0066.npy')
+   qice_icon_grid = np.load('qi+qs+qg_icon0043_icon0066_59987_60001.npy')
+
+
+xx1, yy1 = np.meshgrid(np.arange(qice_icon_grid.shape[1]),h_AMA1)
 yy1 = yy1/1000.
-c = ax[1].contourf(xx1,yy1,qi_icon_pos.T,cmap=cm.Blues,norm=colors.LogNorm(),levels=levels)
-ax[1].set_ylabel('Model level',fontsize=fs)
+c = ax[1].contourf(xx1,yy1,qice_icon_grid[0].T,cmap=cm.Blues,norm=colors.LogNorm(),levels=levels)
+ax[1].set_ylabel('Height [km]',fontsize=fs)
 ax[1].set_xlabel('CloudSat scan number',fontsize=fs)
 ax[1].set_ylim([2,20])
 #ax[1].invert_yaxis()
 plt.colorbar(c,label=r'IWC [g m$^{-3}$]',ax=ax[1],ticks=[0.001,0.01,0.1,1,10])
 
-fig.savefig('CS_' + fi[:20] + 'ICON' + modeltimestep + '_comparison_ZL.pdf',bbox_inches='tight')
+xx2, yy2 = np.meshgrid(np.arange(qice_icon_grid.shape[1]),h_AMA1)
+yy2 = yy2/1000.
+c = ax[3].contourf(xx2,yy2,qice_icon_grid[1].T,cmap=cm.Greens,norm=colors.LogNorm(),levels=levels)
+ax[3].set_ylabel('Height [km]',fontsize=fs)
+ax[3].set_xlabel('CloudSat scan number',fontsize=fs)
+ax[3].set_xlim([0,500])
+ax[3].set_ylim([2,20])
+#ax[3].invert_yaxis()
+plt.colorbar(c,label=r'IWC [g m$^{-3}$]',ax=ax[3],ticks=[0.001,0.01,0.1,1,10])
+
+#fig.savefig('CS_' + fi[:20] + 'ICON' + modeltimestep + '_comparison_ZL.pdf',bbox_inches='tight')
+fig.savefig('CloudSat_ICON_comparison.pdf',bbox_inches='tight')
 plt.show()
 sys.exit()
 

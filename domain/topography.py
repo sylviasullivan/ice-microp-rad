@@ -30,9 +30,9 @@ def get_projection(dset,axes):
     m.shadedrelief()
     m.drawcoastlines()
     m.drawparallels(np.arange(-90.0, 90.0, 5.), linewidth=0.5, color='white',
-              labels=[True, False, False, True], fontsize=7)
+              labels=[True, False, False, True], fontsize=14)
     m.drawmeridians(np.arange(0.0, 360.0, 5.), linewidth=0.5, color='white',
-              labels=[True, False, False, True], fontsize=7)
+              labels=[True, False, False, True], fontsize=14)
     x, y = m(x, y)
     return(m, x, y)
 
@@ -103,5 +103,5 @@ _, _, lon_2cice, lat_2cice, zeit_2cice = read_cloudsatcalipso_hdf_file(CSfi,'IWC
 xx2,yy2 = m(lon_2cice, lat_2cice)
 m.plot(xx2,yy2,color='red')
 
-fig.savefig('./topography_flight_track_CloudSat-115E.png',bbox_inches='tight',dpi=100)
+fig.savefig('../output/topography_flight_track_CloudSat-115E.png',bbox_inches='tight',dpi=100)
 plt.show(block=True)

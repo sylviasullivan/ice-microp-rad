@@ -87,13 +87,13 @@ for i in np.arange(n):
 # Read in the simulation values.
 # Filter for values between 25-26.5 N lat and 85-85.5 E lon and store only positive values.
 basedir = '/work/bb1131/b380873/tropic_run5_output/'
-sims = xr.open_dataset(basedir + 'QV_QI_60-70_0.025deg_zlev.nc')
+sims = xr.open_dataset(basedir + 'QV_QI_60-70_0.025deg_HL.nc')
 qi_s = sims.qi.sel(time=datetime(2017,8,8,6,0),lat=slice(25,26.5),lon=slice(85,85.5))
 qv_s = sims.qv.sel(time=datetime(2017,8,8,6,0),lat=slice(25,26.5),lon=slice(85,85.5))
 qi_s = qi_s.where(qi_s > 0)
 qv_s = qv_s.where(qv_s > 0) # (100, 60, 20)
 z_s = sims.height
-sims = xr.open_dataset(basedir + 'UVT_60-70_0.025deg_zlev.nc')
+sims = xr.open_dataset(basedir + 'UVT_60-70_0.025deg_HL.nc')
 T_s = sims.temp.sel(time=datetime(2017,8,8,6,0),lat=slice(25,26.5),lon=slice(85,85.5))
 P_s = sims.air_pressure.sel(time=datetime(2017,8,8,6,0),lat=slice(25,26.5),lon=slice(85,85.5))
 
@@ -110,10 +110,12 @@ P_s_profile = P_s.mean({'lat','lon'})
 kappa = 0.285714
 P_0 = 100000
 theta_s_profile = (T_s * (P_0 / P_s) ** kappa).mean({'lat','lon'})
-# Use Equation (6) RHice parameterization as f(T) from Koroleve & Isaac 2006.
-T_C = T_s - 273
-rhi_s_profile = (0.0195*T_C**2 + 0.266*T_C + 100.5).mean({'lat','lon'})
-#rhi_s_profile = P_s_profile / satVapP_ice(T_s_profile) * 100.
+# Use Murphy & Koop equation for p_sat,ice. eps = ratio of water vapor and dry air
+# molar masses.
+e = qv_s / (1 - qv_s)
+eps = 0.622
+e_si = eps * satVapP_ice(T_s) / (P_s - satVapP_ice(T_s))
+rhi_s_profile = (e / e_si).mean({'lat','lon'}) * 100
 
 fs = 12
 fig, ax = plt.subplots(nrows=1,ncols=4,figsize=(13,5.5))
@@ -158,7 +160,7 @@ plt.gca().set_yticklabels([])
 ax[3].grid(b=True,which='both',axis='both',color='gray',linewidth=0.5)
 ax[3].scatter(rhice_fish,alt4/1000,color='k',s=10,marker='*',label='FISH')
 ax[3].scatter(rhice_flash,alt4/1000,color='gray',s=10,marker='*',label='FLASH')
-#ax[3].scatter(rhi_s_profile,z_s/1000,marker='o',color='r',s=15)
+ax[3].scatter(rhi_s_profile,z_s/1000,marker='o',color='r',s=15)
 ax[3].set_ylim([15,19])
 ax[3].set_xlim([40,150])
 ax[3].set_xlabel('RHice [%]',fontsize=fs)
@@ -166,5 +168,5 @@ ax[3].legend(loc='upper right')
 plt.gca().set_yticklabels([])
 
 plt.tight_layout()
-plt.savefig('StratoClim_ICON_profiles.pdf',dpi=200,bbox_inches='tight')
+#plt.savefig('StratoClim_ICON_profiles.pdf',dpi=200,bbox_inches='tight')
 plt.show()
