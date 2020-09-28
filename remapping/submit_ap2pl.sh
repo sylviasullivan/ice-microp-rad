@@ -1,17 +1,18 @@
-# This version assumes that you start with files that have already
-# been vertically regridded.
-
-# Build a command to remap the model level output to the pressure levels
-# given in PMEAN_*-*.txt
+#!/bin/ksh
+#SBATCH --account=bb1018
+#SBATCH --job-name=ap2pl
+#SBATCH --partition=compute2
+#SBATCH --nodes=1
+#SBATCH --output=/work/bb1131/b380873/tropic_vis/logs/LOG_ap2pl.run.%j.o
+#SBATCH --error=/work/bb1131/b380873/tropic_vis/logs/LOG_ap2pl.run.%j.o
+#SBATCH --time=01:00:00
 
 # Directory and inputs to build the file names.
 basedir='/scratch/b/b380873/tropic_run5_novgrid/'
-echo 'File prefix, e.g. WINDTH_3D, RAD_3D'
-read fileprefix
-echo 'First timestep, e.g. 1, 25, 52'
-read lowtimestep
-echo 'Last timestep'
-read hightimestep
+fileprefix1='WINDTH_3D'
+fileprefix2='WT'
+lowtimestep=1
+hightimestep=12
 
 for timestep in $(seq $lowtimestep $hightimestep); do
     echo $timestep
@@ -29,29 +30,27 @@ for timestep in $(seq $lowtimestep $hightimestep); do
 
     # Read the pressure levels from the txt file. Add them line by line to $pressures.
     # c counts how many pressures are specified.
-    #c=0
-    #pressures=
-    #while read -r line; do pressures=$pressures$line','; c=$((c+1)); done < PMEAN_48-72.txt
-    #echo $c' pressures specified'
+    c=0
+    pressures=
+    while read -r line; do pressures=$pressures$line','; c=$((c+1)); done < PMEAN_48-72.txt
+    echo $c' pressures specified'
 
     # Remove the last comma from $pressures.
-    #pressures="${pressures%?}"
+    pressures="${pressures%?}"
 
     # Simpler route. Pressures must [=] Pa.
     #pressures='90000,85000,75000,50000,25000'
-    pressures='5000,7000,10000,15000,20000,25000,30000,40000,50000,60000,70000,80000,85000,90000,92500,95000,97500,100000'
 
     # Assemble the filenames and command.
     part1='cdo -ap2pl,'
-#    part2='-selvar,w,air_pressure,pres_sfc'
-    inputfile=$basedir$fileprefix'_icon_tropic_'$timestepprefix$timestep'.nc'
-    outputfile=$basedir$fileprefix'_icon_tropic_'$timestepprefix$timestep'_PL.nc'
+    part2='-selvar,air_pressure,temp,omega'
+    inputfile=$basedir$fileprefix1'_icon_tropic_'$timestepprefix$timestep'.nc'
+    outputfile=$basedir$fileprefix2'_icon_tropic_'$timestepprefix$timestep'_PL2.nc'
 
     # Rename pres as air_pressure in the $inputfile.
     cdo chname,pres,air_pressure $inputfile $basedir'temp.nc'
     cmd=$part1$pressures' '$part2' '$basedir'temp.nc '$outputfile
 
     # Evaluate the command as you would from the command line.
-    echo $cmd
     eval $cmd
 done

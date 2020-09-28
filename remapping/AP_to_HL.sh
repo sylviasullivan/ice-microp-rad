@@ -31,9 +31,9 @@ for timestep in $(seq $lowtimestep $hightimestep); do
     # c counts how many heights are specified.
     c=0
     heights=
-    #while read -r line; do heights=$heights$line','; c=$((c+1)); done < HEIGHTS_fig2.txt
+    while read -r line; do heights=$heights$line','; c=$((c+1)); done < HEIGHTS_fig2.txt
     #while read -r line; do heights=$heights$line','; c=$((c+1)); done < HEIGHTS_CloudSat.txt
-    while read -r line; do heights=$heights$line','; c=$((c+1)); done < HEIGHTS_full_range.txt
+    #while read -r line; do heights=$heights$line','; c=$((c+1)); done < HEIGHTS_full_range.txt
     echo $c' heights specified'
 
     # Remove the last comma from $heights.

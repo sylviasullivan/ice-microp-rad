@@ -2,9 +2,11 @@
 *.mp4
 *.npy
 *.txt
+*.nc
 MidpointNormalize.py
 CloudSat/__pycache__/
 other/
+remapping/170e_grid/
 obs/
 logs/
 *.pyc
