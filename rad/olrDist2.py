@@ -26,6 +26,7 @@ olr_ceres_sub1 = np.reshape(olr_ceres[ii],(olr_ceres.shape[1]*olr_ceres.shape[2]
 basedir = '/work/bb1131/b380873/tropic_vis/obs/ERA5/'
 olr_file = basedir + 'ERA5_OLR_1deg[55-170]-20170805-20170809.nc'
 olr_data = xr.open_dataset(olr_file)
+#olr_era5 = np.abs(olr_data.ttr.values)[:,:61]/3600
 olr_era5 = np.abs(olr_data.mtnlwrf.values)[:,:61]
 zeit_era5 = olr_data.time.values
 
@@ -39,7 +40,7 @@ olr_era5_sub1 = np.reshape(olr_era5[ii],(olr_era5.shape[1]*olr_era5.shape[2],))
 
 # Read in the ICON-1mom simulation.
 basedir = '/work/bb1131/b380873/tropic_run2_output/'
-olr_file = basedir + 'OLR_TOA_all_1deg.nc'
+olr_file = basedir + 'OLR_TOA_all.nc' # 1deg
 olr_data = xr.open_dataset(olr_file)
 olr_icon = np.abs(olr_data.lwflxall.values)[:,:61]
 zeit_icon = olr_data.time.values
@@ -54,7 +55,7 @@ olr_icon_sub1 = np.reshape(olr_icon[ii,0],(olr_icon.shape[2]*olr_icon.shape[3],)
 
 # Read in the ICON-2mom simulation.
 basedir = '/work/bb1131/b380873/tropic_run5_output/'
-olr_file2 = basedir + 'OLR_120-141_1.0deg.nc'
+olr_file2 = basedir + 'OLR_120-141_0.025deg.nc' # 1deg
 olr_data2 = xr.open_dataset(olr_file2)
 olr_icon2 = np.abs(olr_data2.thb_t.values)
 zeit_icon2 = olr_data2.time.values
@@ -85,7 +86,7 @@ fs = 13
 
 fig, ax = plt.subplots(1,2,figsize=(9,5))
 #fig.subplots_adjust(hspace=0.1, wspace=0, top=0.95, left=0.1) #top=0.925
-#h = np.zeros((49,6))
+h = np.zeros((49,4))
 
 for j in np.arange(2):
     ax[j].set_title(titre[j],fontsize=fs-2)
@@ -98,13 +99,21 @@ for j in np.arange(2):
         kde_kws={'shade':True,'linewidth':3},ax=ax[j],label='ICON-1mom')
     sns.distplot(olr[j+6],bins=np.linspace(d,u,b),kde=True,hist=False,color=farbe[3],
         kde_kws={'shade':True,'linewidth':3},ax=ax[j],label='ICON-2mom')
-    #wgts = np.ones_like(olr[c])/float(len(olr[c]))*100
     #ax[j].hist(olr[c],bins=np.linspace(80,360,50),color=farbe[c],edgecolor='k',\
     #        weights=wgts)
-    #h[:,c],bar_edges = np.histogram(olr[c],bins=np.linspace(80,360,50),weights=wgts)
-    ax[j].set_xlabel('OLR [W m$^{-2}$]',fontsize=fs)
     if j == 0:
-       ax[j].set_ylabel('Probability',fontsize=fs)
+       wgts = np.ones_like(olr[j])/float(len(olr[j]))*100
+       h[:,j],bar_edges = np.histogram(olr[j],bins=np.linspace(80,360,50),weights=wgts)
+       wgts = np.ones_like(olr[j+2])/float(len(olr[j+2]))*100
+       h[:,j+1],bar_edges = np.histogram(olr[j+2],bins=np.linspace(80,360,50),weights=wgts)
+       wgts = np.ones_like(olr[j+4])/float(len(olr[j+4]))*100
+       h[:,j+2],bar_edges = np.histogram(olr[j+4],bins=np.linspace(80,360,50),weights=wgts)
+       wgts = np.ones_like(olr[j+6])/float(len(olr[j+6]))*100
+       h[:,j+3],bar_edges = np.histogram(olr[j+6],bins=np.linspace(80,360,50),weights=wgts)
+    ax[j].set_xlabel('OLR [W m$^{-2}$]',fontsize=fs)
+    ax[j].set_xlim([80,360])
+    if j == 0:
+       ax[j].set_ylabel('Probability density',fontsize=fs)
     #if j == 0 and i == 1:
     #   ax[i,j].text(0.05,0.8,'KL(CERES | ERA5) = 3.99',transform=ax[i,j].transAxes)
     #if j == 1 and i == 1:
@@ -131,9 +140,10 @@ for j in np.arange(2):
 
 #print(h[:,2])
 #print(np.stack(bar_edges,h[:,2]))
-#print('ERA5 from CERES (0h): ' + str(kl_divergence(h[:,0],h[:,1])))
+print('ERA5 from CERES (0h): ' + str(kl_divergence(h[:,0],h[:,1])))
 #print('CERES from ERA5 (0h): ' + str(kl_divergence(h[:,1],h[:,0])))
-#print('ICON from CERES (0h): ' + str(kl_divergence(h[:,0],h[:,2])))
+print('ICON 1mom from CERES (0h): ' + str(kl_divergence(h[:,0],h[:,2])))
+print('ICON 2mom from CERES (0h): ' + str(kl_divergence(h[:,0],h[:,3])))
 #print('CERES from ICON (0h): ' + str(kl_divergence(h[:,2],h[:,0])))
 #print('ICON from ERA5 (0h): ' + str(kl_divergence(h[:,1],h[:,2])))
 #print('ERA5 from ICON (0h): ' + str(kl_divergence(h[:,2],h[:,1])))
@@ -148,5 +158,5 @@ for j in np.arange(2):
 
 
 fig.tight_layout(w_pad=0.2)
-fig.savefig('olr-distribution_115e_1deg.pdf',bbox_inches='tight')
+fig.savefig('../output/olr-distribution_115e.pdf',bbox_inches='tight')
 plt.show()

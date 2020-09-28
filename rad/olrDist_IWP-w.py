@@ -13,6 +13,10 @@ W_fi = xr.open_dataset(basedir + 'W_ALL-0051-0061_0.025.nc')
 t1 = OLR_fi.time
 t2 = W_fi.time
 t3 = TQI_fi.time
+print(t1)
+print(t2)
+print(t3)
+sys.exit()
 
 # Make sure the times correspond between datasets and that the lons
 # correspond to the smaller domain.
@@ -93,15 +97,15 @@ OLR_5 = OLR.where((W500 < 0),drop=True).values.flatten()
 OLR_5 = -1*OLR_5[~np.isnan(OLR_5)]
 
 sns.distplot(OLR_5,bins=np.linspace(d,u,b),kde=True,hist=False,color=farbe[4],
-    kde_kws={'shade':True,'linewidth':3},ax=ax[0,2],label=r'$w_{250}$ $<$ 0 m s$^{-1}$')
+    kde_kws={'shade':True,'linewidth':3},ax=ax[0,2],label=r'$w_{500}$ $<$ 0 m s$^{-1}$')
 sns.distplot(OLR_1,bins=np.linspace(d,u,b),kde=True,hist=False,color=farbe[3],
-    kde_kws={'shade':True,'linewidth':3},label=r'$w_{250}$ $\in$ [0,0.1] m s$^{-1}$',ax=ax[0,2])
+    kde_kws={'shade':True,'linewidth':3},label=r'$w_{500}$ $\in$ [0,0.1] m s$^{-1}$',ax=ax[0,2])
 sns.distplot(OLR_2,bins=np.linspace(d,u,b),kde=True,hist=False,color=farbe[2],
-    kde_kws={'shade':True,'linewidth':3},ax=ax[0,2],label=r'$w_{250}$ $\in$ [0.1,1] m s$^{-1}$')
+    kde_kws={'shade':True,'linewidth':3},ax=ax[0,2],label=r'$w_{500}$ $\in$ [0.1,1] m s$^{-1}$')
 sns.distplot(OLR_3,bins=np.linspace(d,u,b),kde=True,hist=False,color=farbe[1],
-    kde_kws={'shade':True,'linewidth':3},ax=ax[0,2],label=r'$w_{250}$ $\in$ [1,5] m s$^{-1}$')
+    kde_kws={'shade':True,'linewidth':3},ax=ax[0,2],label=r'$w_{500}$ $\in$ [1,5] m s$^{-1}$')
 sns.distplot(OLR_4,bins=np.linspace(d,u,b),kde=True,hist=False,color=farbe[0],
-    kde_kws={'shade':True,'linewidth':3},ax=ax[0,2],label=r'$w_{250}$ $>$ 5 m s$^{-1}$')
+    kde_kws={'shade':True,'linewidth':3},ax=ax[0,2],label=r'$w_{500}$ $>$ 5 m s$^{-1}$')
 ax[0,2].set_xlim([d-20,u])
 ax[0,2].legend(loc='upper left',fontsize=8)
 
@@ -195,5 +199,5 @@ ax[1,2].set_xlabel(r'OLR [W m$^{-2}$]',fontsize=fs)
 
 plt.rc('xtick',labelsize=12)
 plt.rc('ytick',labelsize=12)
-fig.savefig('olrDist_IWP-w.pdf',bbox_inches='tight')
+#fig.savefig('olrDist_IWP-w.pdf',bbox_inches='tight')
 plt.show()

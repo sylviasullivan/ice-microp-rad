@@ -29,9 +29,10 @@ zeit_ceres_sub1 = zeit_ceres[ii]
 
 # Read in the ERA5 values.
 basedir = '/work/bb1131/b380873/tropic_vis/obs/ERA5/'
-olr_file = basedir + 'ERA5_OLR_1deg[55-170]-20170805-20170809.nc'
+olr_file = basedir + 'ERA5_OLR-20170805-20170809.nc' #'ERA5_OLR_1deg[55-170]-20170805-20170809.nc'
 olr_data = xr.open_dataset(olr_file)
-olr_era5 = np.abs(olr_data.mtnlwrf.values)
+olr_era5 = np.abs(olr_data.ttr.values)/3600
+#olr_era5 = np.abs(olr_data.mtnlwrf.values)
 lons_era5 = olr_data.longitude
 lats_era5 = olr_data.latitude
 zeit_era5 = olr_data.time.values
@@ -51,7 +52,7 @@ zeit_era5_sub1 = zeit_era5[ii]
 
 # Read in the ICON 1-mom simulation.
 basedir = '/work/bb1131/b380873/tropic_run2_output/'
-olr_file = basedir + 'OLR_TOA_all_1deg.nc'
+olr_file = basedir + 'OLR_TOA_all.nc' #'OLR_TOA_all_1deg.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_icon = np.abs(olr_data.lwflxall.values)
 lons_icon = olr_data.lon
@@ -64,14 +65,14 @@ ii = np.argwhere(zeit_icon >= np.datetime64(exttime))[0,0]
 olr_icon_sub = olr_icon[ii,0]
 zeit_icon_sub = zeit_icon[ii]
 
-exttime = datetime(2017,8,8,0,6)
+exttime = datetime(2017,8,8,6,0)
 ii = np.argwhere(zeit_icon >= np.datetime64(exttime))[0,0]
 olr_icon_sub1 = olr_icon[ii,0]
 zeit_icon_sub1 = zeit_icon[ii]
 
 # Read in the ICON 2-mom simulation.
 basedir = '/work/bb1131/b380873/tropic_run5_output/'
-olr_file = basedir + 'OLR_120-141_1.0deg.nc'
+olr_file = basedir + 'OLR_120-141_0.025deg.nc' # 'OLR_120-141_1.0deg.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_icon2 = np.abs(olr_data.thb_t.values)
 lons_icon2 = olr_data.lon
@@ -84,7 +85,7 @@ ii = np.argwhere(zeit_icon2 >= np.datetime64(exttime))[0,0]
 olr_icon_sub2 = olr_icon2[ii]
 zeit_icon_sub2 = zeit_icon2[ii]
 
-exttime = datetime(2017,8,8,0,6)
+exttime = datetime(2017,8,8,6,0)
 ii = np.argwhere(zeit_icon2 >= np.datetime64(exttime))[0,0]
 olr_icon_sub12 = olr_icon2[ii]
 zeit_icon_sub12 = zeit_icon2[ii]
@@ -107,11 +108,11 @@ def resize_colobar(event):
     cbar_ax.set_position([posn.x0 + posn.width + 0.01, posn.y0,
                           0.04, posn.height])
 
-levs = np.linspace(90,375,15)
-titre = ['CERES OLR: ' + str(zeit_ceres_sub),'ERA5 OLR: '+ str(zeit_era5_sub), \
-         'ICON-1mom OLR: ' + str(zeit_icon_sub),'ICON-2mom OLR: ' + str(zeit_icon_sub2), \
-         'CERES OLR: ' + str(zeit_ceres_sub1),'ERA5 OLR: ' + str(zeit_era5_sub1), \
-         'ICON-1mom OLR: ' + str(zeit_icon_sub1),'ICON-2mom OLR: ' + str(zeit_icon_sub12)]
+levs = np.linspace(80,375,15)
+titre = ['CERES OLR: ' + str(zeit_ceres_sub)[:16],'ERA5 OLR: '+ str(zeit_era5_sub)[:16], \
+         'ICON-1mom OLR: ' + str(zeit_icon_sub)[:16],'ICON-2mom OLR: ' + str(zeit_icon_sub2)[:16], \
+         'CERES OLR: ' + str(zeit_ceres_sub1)[:16],'ERA5 OLR: ' + str(zeit_era5_sub1)[:16], \
+         'ICON-1mom OLR: ' + str(zeit_icon_sub1)[:16],'ICON-2mom OLR: ' + str(zeit_icon_sub12)[:16]]
 lons = [lons_ceres, lons_era5, lons_icon, lons_icon2, lons_ceres, lons_era5, lons_icon, lons_icon2]
 lats = [lats_ceres, lats_era5, lats_icon, lats_icon2, lats_ceres, lats_era5, lats_icon, lats_icon2]
 olr = [olr_ceres_sub, olr_era5_sub, olr_icon_sub, olr_icon_sub2, olr_ceres_sub1, olr_era5_sub1, \
@@ -137,7 +138,7 @@ for j in np.arange(2):
         gl.yformatter = LATITUDE_FORMATTER
 
         ax[i,j].set_extent([55,115,-5,38],crs=ccrs.PlateCarree())
-        im.set_clim([90,375])
+        im.set_clim([80,375])
         ax[i,j].coastlines()
         c += 1
 
@@ -145,5 +146,5 @@ fig.canvas.mpl_connect('resize_event', resize_colobar)
 plt.colorbar(im,label=r'W m$^{-2}$',cax=cbar_ax)
 
 resize_colobar(None)
-#fig.savefig('olr-comparison_115e_1deg.pdf',bbox_inches='tight')
+#fig.savefig('../output/olr-comparison_115e.png',bbox_inches='tight')
 plt.show()
