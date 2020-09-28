@@ -13,7 +13,11 @@ domain/ - scripts to visualize the simulation domain and vertical grids
 - *vgrid_vis.py* - level count versus altitude for the increased and default vertical grids
 
 dynamics/ - script to visualize the flow fields
-- **
+- *MMCR_ICON.py* - comparison of the millimeter cloud radar and ICON vertical velocities
+- *wComp.py* - spatial comparison of ERA5 and ICON-simulated pressure velocities at 250 and 500 hPa
+- *wDist_subdomains.py* - visualization of data from Silvia Bucci
+- *winds.py, wind_lowlevel.py, winds_hilevel.py* - visualization of wind fields at three levels (850, 500, 250 hPa) or just one level
+- *wT-profiles.py* - deviations in daily-mean, domain-mean pressure velocity and temperature profiles from the 4 simulations
 
 ice/ - scripts to visualize the ice fields
 
@@ -41,3 +45,4 @@ remapping/ - scripts to perform vertical or horizontal remapping
 
 utilities 
 - *KL_div.py* - calculate the Kullback-Leibler divergence between two distributions
+- *z_from_ml.py* - calculate the approximate altitude for a given model level at lat/lon using the external parameter topography
