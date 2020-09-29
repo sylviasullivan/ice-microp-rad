@@ -58,7 +58,10 @@ remapping/ - scripts to perform vertical or horizontal remapping
 - *submit_remapcon.sh, submit_remapdis.sh* - slurm script to perform variable-conserving or distance-weighted remapping 
 
 traj/ - scripts to visualize the trajectory outputs
-- 
+- *lagranto_vis.py* - attempt to use the lagranto.plotting package
+- *traj_nc.py* - trajectory file postprocessing script
+- *traj_time.py, traj_time2.py* - visualize the ice mass mixing ratio in the CLaMS-ice versus ICON trajectory over time (the first also shows filtering for same trajectory mean temperature)
+- *traj_vis.py* - visualize the trajectories colored by altitude over a land type-colored map
 
 utilities 
 - *convertTXTNC.py* - generate nc files from the grid description txt file
