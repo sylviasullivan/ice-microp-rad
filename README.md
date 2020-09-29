@@ -20,6 +20,21 @@ dynamics/ - script to visualize the flow fields
 - *wT-profiles.py* - deviations in daily-mean, domain-mean pressure velocity and temperature profiles from the 4 simulations
 
 ice/ - scripts to visualize the ice fields
+- *DARDAR_Nice.py* - global climatology of DARDAR ice crystal number values
+- *diurnal-IWPdist.py, diurnal-IWPdist2.py* - diurnally separated probability distributions of IWP (absolute or difference)
+- *IWPdist.py* - log-linear probability distribution of IWP values for 1-mom and 2-mom simulations
+- *IWPdist_land-ocean.py* - probability distribution of IWP over land versus ocean
+- *IWPdist_olr.py* - probability distributions of IWP filtered for different OLR bins
+- *IWPdist_precip.py* - probability distributions of IWP filtered for different precipitation accumulation bins
+- *IWP-wDist.py* - probability distributions of IWP, w_250hPa, w_500hPa values for 1-mom and 2-mom simulations
+- *qi-field.py* - spatial map of ice mass mixing ratio
+- *qi-profiles.py* - daily-mean domain-mean profiles of ice mass mixing ratio for the 1-mom and 2-mom simulations
+- *qi_video.py* - make a video of the ice mass mixing ratio evolution over time
+- *tqi_video.py* - make a video of the column-integraed ice content over time
+
+optics/ - scripts to visualize the cloud optics fields
+- *cldopt_vis.py* - visualize the 2D surface plot of mass absorption coefficient (or single-scattering albedo, asymmetry parameter with modifications) as a function of ice crystal effective radius and wavelength
+- *cldopt_vis2.py* - visualize the mass absorption coefficient, single-scattering albedo, and asymmetry parameters as a function of wavelength, colored for different effective radii
 
 rad/ - scripts to visualize the radiative fields
 - *OLR_v_IWP.py* - visualizes the TOA (outgoing) longwave flux as a function of ice water path (IWP), needs modification re: files read
@@ -42,7 +57,10 @@ remapping/ - scripts to perform vertical or horizontal remapping
 - *submit_griddes.sh* - slurm script to generate a grid description text file
 - *submit_remapcon.sh, submit_remapdis.sh* - slurm script to perform variable-conserving or distance-weighted remapping 
 
+traj/ - scripts to visualize the trajectory outputs
+- 
 
 utilities 
+- *convertTXTNC.py* - generate nc files from the grid description txt file
 - *KL_div.py* - calculate the Kullback-Leibler divergence between two distributions
 - *z_from_ml.py* - calculate the approximate altitude for a given model level at lat/lon using the external parameter topography
