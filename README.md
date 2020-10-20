@@ -41,6 +41,7 @@ rad/ - scripts to visualize the radiative fields
 - *OLR_v_IWP.py* - visualizes the TOA (outgoing) longwave flux as a function of ice water path (IWP), needs modification re: files read
 - *flux-profiles.py* - domain-mean, daily-mean longwave and shortwave profiles in different simulations
 - *heating-profiles.py* - domain mean, daily-mean longwave and shortwave heating profiles in different simulations 
+- *clrsky-profiles.py* - domain mean, daily mean clear-sky longwave and shortwave heating profiles in different simulations
 - *diurnal-heating.py* - heating profiles for each hour throughout the day
 - *olrComp.py, olrComp2.py* - spatial comparisons of outgoing longwave radiation (OLR) (between CERES, ERA5, and ICON sims *or* between the 4 ICON sims)
 - *olrDist.py* - probability density comparisons of outgoing longwave radiation (OLR) between CERES, ERA5, and ICON, shows these individually with their KL div
@@ -60,6 +61,7 @@ remapping/ - scripts to perform vertical or horizontal remapping
 
 traj/ - scripts to visualize the trajectory outputs
 - *lagranto_vis.py* - attempt to use the lagranto.plotting package
+- *qv_time.py* - compare the mean specific humidity along CLaMS-ice and ICON trajectories
 - *traj_nc.py* - trajectory file postprocessing script
 - *traj_time.py, traj_time2.py* - visualize the ice mass mixing ratio in the CLaMS-ice versus ICON trajectory over time (the first also shows filtering for same trajectory mean temperature)
 - *traj_vis.py* - visualize the trajectories colored by altitude over a land type-colored map
