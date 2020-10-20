@@ -1,7 +1,7 @@
 import matplotlib.dates as mdates
 from datetime import datetime
 from datetime import timedelta
-import time
+import time, sys
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
@@ -10,9 +10,12 @@ from scipy.interpolate import interp1d
 basedir = '/work/bb1131/b380873/traj_output/test2h/'
 clams = xr.open_dataset(basedir + 'cirrus_tst00000751_p001_trim_clams.nc')
 icon = xr.open_dataset(basedir + 'traj_tst00000751_p001_trim.nc')
-clams.rename({'T':'temp'},inplace=True)
+clams = clams.rename({'T':'temp'})
 
 clams_t = clams.time.values
+print(clams_t)
+sys.exit()
+# Convert CLaMS-ice datetimes to seconds after simulation start, corresponding to icon.rtime.
 clams_t = np.array([t.astype('int') for t in clams_t])/1000000000 - 946684800
 icon_t = icon.rtime.values
 
@@ -46,23 +49,24 @@ fig = plt.figure(figsize=(11,5.5))
 dates = [datetime(2017,8,5,16,0) + timedelta(seconds=t) for t in clams_t]
 
 plt.gca().xaxis_date()
-for i in np.arange(n):
-    plt.plot(dates,icon_qi_cubic[i],color=colors1[i],alpha=0.25,lw=0.25)
-    plt.plot(dates,clams_qi[:,i]*10**6,color=colors2[i],alpha=0.25,lw=0.25)
+#for i in np.arange(n):
+#    plt.plot(dates,icon_qi_cubic[i],color=colors1[i],alpha=0.25,lw=0.25)
+#    plt.plot(dates,clams_qi[:,i]*10**6,color=colors2[i],alpha=0.25,lw=0.25)
     # Factor of 10**6 converts to mg per kg
-plt.plot(dates,np.nanmean(icon_qi_cubic,axis=0),color='red',lw=1.25,label='ICON')
-plt.plot(dates,np.nanmean(clams_qi*10**6,axis=1),color='blue',lw=1.25,label='CLaMS-ice')
-plt.gca().set_ylim([10**(-2),20])
+plt.plot(dates,np.nanmean(icon_qi_cubic,axis=0)-np.nanmean(clams_qi*10**6,axis=1),color='red',lw=1.25,label='ICON-CLaMS-ice')
+#plt.plot(dates,np.nanmean(clams_qi*10**6,axis=1),color='blue',lw=1.25,label='CLaMS-ice')
+#plt.gca().set_ylim([10**(-2),20])
 plt.gca().set_ylabel(r'Ice mass mixing ratio [mg kg$^{-1}$]',fontsize=fs)
 plt.gca().set_xlabel('Trajectory time',fontsize=fs)
 years_fmt = mdates.DateFormatter('%Y-%m-%d %H:%M')
 plt.gca().xaxis.set_major_formatter(years_fmt)
 fig.autofmt_xdate()
 plt.legend(loc='upper left')
-plt.savefig('../output/CLAMS-ICON-traj_time.png')
+plt.savefig('../output/CLAMS-ICON-traj_qidiff_time.png')
 plt.show()
 sys.exit()
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Classify the trajectories by their mean temperature.
 meant = np.zeros((icon_qi_cubic.shape[0],))
 for i in np.arange(icon_qi_cubic.shape[0]):
@@ -78,7 +82,7 @@ for i in np.arange(icon_qi_cubic.shape[0]):
 ii = np.argwhere(meant == 3)
 ax[1].xaxis_date()
 ax[1].plot(dates,np.nanmean(icon_qi_cubic[ii[:,0]],axis=0),color='red',lw=1.25)
-ax[1].plot(dates,np.nanmean(clams_qi[:,ii[:,0]],axis=1),color='blue',lw=1.25)
+ax[1].plot(dates,np.nanmedian(clams_qi[:,ii[:,0]],axis=1),color='blue',lw=1.25)
 print(np.nanmean(icon_qi_cubic[ii[:,0]],axis=0))
 print(np.nanmean(clams_qi[:,ii[:,0]],axis=1))
 #plt.gca().set_ylim([10**(-2),10**2])

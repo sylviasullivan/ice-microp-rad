@@ -107,5 +107,5 @@ c = plt.colorbar(sm)
 c.set_label('Traj. altitude [km]',fontsize=fs)
 c.ax.tick_params(labelsize=fs)
 
-fig.savefig('../output/traj_test24h_vis3.pdf',bbox_inches='tight')
+fig.savefig('../output/traj_test24h_vis3.png',bbox_inches='tight')
 plt.show()
