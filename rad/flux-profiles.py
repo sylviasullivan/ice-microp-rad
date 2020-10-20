@@ -50,9 +50,9 @@ if arr[0] == True:
        FLX_1mom[i-1,2] = flx.swflxall.isel(time=0).where(clch > f).mean(dim={'ncells'})
        FLX_1mom[i-1,3] = flx.swflxclr.isel(time=0).where(clch > f).mean(dim={'ncells'})
    print('Saving 1mom fluxes...')
-   np.save('./output/FLX_1mom' + suffix2 + '.npy',FLX_1mom)
+   np.save('../output/FLX_1mom' + suffix2 + '.npy',FLX_1mom)
 else:
-   FLX_1mom = np.load('./output/FLX_1mom' + suffix2 + '.npy')
+   FLX_1mom = np.load('../output/FLX_1mom' + suffix2 + '.npy')
 
 
 if arr[1] == True:
@@ -67,9 +67,9 @@ if arr[1] == True:
        FLX_no2mom[i-1,2] = flx.swflxall.isel(time=0).where(clch > f).mean(dim={'ncells'})
        FLX_no2mom[i-1,3] = flx.swflxclr.isel(time=0).where(clch > f).mean(dim={'ncells'})
    print('Saving no2mom fluxes...')
-   np.save('./output/FLX_no2mom' + suffix2 + '.npy',FLX_no2mom)
+   np.save('../output/FLX_no2mom' + suffix2 + '.npy',FLX_no2mom)
 else:
-   FLX_no2mom = np.load('./output/FLX_no2mom' + suffix2 + '.npy')
+   FLX_no2mom = np.load('../output/FLX_no2mom' + suffix2 + '.npy')
 
 
 if arr[2] == True:
@@ -84,9 +84,9 @@ if arr[2] == True:
        FLX_novgrid[i-1,2] = flx.swflxall.isel(time=0).where(clch > f).mean(dim={'ncells'})
        FLX_novgrid[i-1,3] = flx.swflxclr.isel(time=0).where(clch > f).mean(dim={'ncells'})
    print('Saving novgrid fluxes...')
-   np.save('./output/FLX_novgrid' + suffix2 + '.npy',FLX_novgrid)
+   np.save('../output/FLX_novgrid' + suffix2 + '.npy',FLX_novgrid)
 else:
-   FLX_novgrid = np.load('./output/FLX_novgrid' + suffix2 + '.npy')
+   FLX_novgrid = np.load('../output/FLX_novgrid' + suffix2 + '.npy')
 
 
 if arr[3] == True:
@@ -101,9 +101,9 @@ if arr[3] == True:
        FLX_2mom[i-49,2] = flx.swflxall.isel(time=0).where(clch > f).mean(dim={'ncells'})
        FLX_2mom[i-49,3] = flx.swflxclr.isel(time=0).where(clch > f).mean(dim={'ncells'})
    print('Saving 2mom fluxes...')
-   np.save('./output/FLX_2mom' + suffix2 + '.npy',FLX_2mom)
+   np.save('../output/FLX_2mom' + suffix2 + '.npy',FLX_2mom)
 else:
-   FLX_2mom = np.load('./output/FLX_2mom' + suffix2 + '.npy')
+   FLX_2mom = np.load('../output/FLX_2mom' + suffix2 + '.npy')
 
 
 # Retrieve the pressure levels
@@ -150,7 +150,7 @@ ax[1].tick_params(labelsize=fs)
 ax[1].legend(fontsize=fs-3,loc='center right')
 fig.suptitle('Daily-median domain-mean flux profiles',fontsize=fs)
 
-fig.savefig('./output/lw-sw-flux-profiles2.pdf')
+#fig.savefig('../output/lw-sw-flux-profiles2.pdf')
 plt.show()
 
 
@@ -170,7 +170,28 @@ plt.gca().set_yticks([800,500,300,100])
 plt.gca().set_yticklabels(['800','500','300','100'])
 plt.gca().tick_params(labelsize=fs)
 plt.gca().legend(fontsize=fs-1)
-fig.savefig('./output/flux-profiles2.pdf')
+#fig.savefig('../output/flux-profiles2.pdf')
 plt.show()
 
+
+fig = plt.figure(figsize=(8,4.5))
+colors = plt.cm.jet(np.linspace(0,1,24))
+for i in np.arange(24):
+    plt.plot(FLX_1mom[i,0],pl/100,color=colors[i],label='ICON-1mom')
+#plt.plot(np.nanmedian(FLX_2mom[:,0]+FLX_2mom[:,1],axis=0),pl/100,color='green',label='ICON-2mom')
+#plt.plot(np.nanmedian(FLX_no2mom[:,0]+FLX_no2mom[:,1],axis=0),pl/100,color='blue',label='ICON-no2mom')
+#plt.plot(np.nanmedian(FLX_novgrid[:,0]+FLX_novgrid[:,1],axis=0),pl/100,color='gold',label='ICON-novgrid')
+plt.plot([0,0],[50,1000],lw=0.75,linestyle='--',color='k')
+plt.ylabel('Pressure [hPa]',fontsize=fs)
+plt.xlabel(r'Cloud radiative fluxes [W m$^{-2}$]',fontsize=fs)
+plt.title('Hourly domain-mean flux profiles',fontsize=fs)
+plt.ylim([50,800])
+plt.yscale('log')
+plt.gca().invert_yaxis()
+plt.gca().set_yticks([800,500,300,100])
+plt.gca().set_yticklabels(['800','500','300','100'])
+plt.gca().tick_params(labelsize=fs)
+plt.gca().legend(fontsize=fs-1)
+#fig.savefig('../output/diurnal-flux-profiles.pdf')
+plt.show()
 

@@ -44,9 +44,9 @@ if arr[0] == True:
        WT_1mom[i-1,0] = flx.omega.isel(time=0).where(clch > f).mean(dim={'ncells'})
        WT_1mom[i-1,1] = flx.temp.isel(time=0).where(clch > f).mean(dim={'ncells'})
    print('Saving 1mom omega and T profiles...')
-   np.save('./output/WT_1mom' + suffix2 + '.npy',WT_1mom)
+   np.save('../output/WT_1mom' + suffix2 + '.npy',WT_1mom)
 else:
-   WT_1mom = np.load('./output/WT_1mom' + suffix2 + '.npy')
+   WT_1mom = np.load('../output/WT_1mom' + suffix2 + '.npy')
 
 
 if arr[1] == True:
@@ -59,9 +59,9 @@ if arr[1] == True:
        WT_no2mom[i-1,0] = flx.omega.isel(time=0).where(clch > f).mean(dim={'ncells'})
        WT_no2mom[i-1,1] = flx.temp.isel(time=0).where(clch > f).mean(dim={'ncells'})
    print('Saving no2mom fluxes...')
-   np.save('./output/WT_no2mom' + suffix2 + '.npy',WT_no2mom)
+   np.save('../output/WT_no2mom' + suffix2 + '.npy',WT_no2mom)
 else:
-   WT_no2mom = np.load('./output/WT_no2mom' + suffix2 + '.npy')
+   WT_no2mom = np.load('../output/WT_no2mom' + suffix2 + '.npy')
 
 
 if arr[2] == True:
@@ -74,9 +74,9 @@ if arr[2] == True:
        WT_novgrid[i-1,0] = flx.omega.isel(time=0).where(clch > f).mean(dim={'ncells'})
        WT_novgrid[i-1,1] = flx.temp.isel(time=0).where(clch > f).mean(dim={'ncells'})
    print('Saving novgrid fluxes...')
-   np.save('./output/WT_novgrid' + suffix2 + '.npy',WT_novgrid)
+   np.save('../output/WT_novgrid' + suffix2 + '.npy',WT_novgrid)
 else:
-   WT_novgrid = np.load('./output/WT_novgrid' + suffix2 + '.npy')
+   WT_novgrid = np.load('../output/WT_novgrid' + suffix2 + '.npy')
 
 
 if arr[3] == True:
@@ -89,9 +89,9 @@ if arr[3] == True:
        WT_2mom[i-48,0] = flx.omega.isel(time=0).where(clch > f).mean(dim={'ncells'})
        WT_2mom[i-48,1] = flx.temp.isel(time=0).where(clch > f).mean(dim={'ncells'})
    print('Saving 2mom fluxes...')
-   np.save('./output/WT_2mom' + suffix2 + '.npy',WT_2mom)
+   np.save('../output/WT_2mom' + suffix2 + '.npy',WT_2mom)
 else:
-   WT_2mom = np.load('./output/WT_2mom' + suffix2 + '.npy')
+   WT_2mom = np.load('../output/WT_2mom' + suffix2 + '.npy')
 
 
 # Retrieve the pressure levels
@@ -102,8 +102,6 @@ pl = flx.plev_2
 fs = 13
 fig, ax = plt.subplots(nrows=1,ncols=2,figsize=(9,6.5))
 p = 0.1
-print(np.percentile(WT_1mom[:,0],p,axis=0))
-print(np.nanmean(WT_1mom[:,0],axis=0))
 #ax[0].plot(np.percentile(WT_1mom[:,0],1,axis=0),pl/100,color='red',label='ICON-1mom')
 ax[0].plot((np.percentile(WT_2mom[:,0],p,axis=0)-np.percentile(WT_1mom[:,0],p,axis=0))*100,\
        pl/100,color='green',label='ICON-2mom')
@@ -138,7 +136,7 @@ ax[0].tick_params(labelsize=fs)
 #ax[1].plot(np.nanmean(WT_1mom[:,0],axis=0),pl/100,color='red',label='ICON-1mom')
 ax[1].plot((np.nanmean(WT_2mom[:,0],axis=0)-np.nanmean(WT_1mom[:,0],axis=0))*100,pl/100,\
        color='green',label='ICON-2mom')
-ax[1].plot((np.nanmean(WT_no2mom[:,0],axis=0)-np.nanmean(WT_no2mom[:,0],axis=0))*100,pl/100,\
+ax[1].plot((np.nanmean(WT_no2mom[:,0],axis=0)-np.nanmean(WT_1mom[:,0],axis=0))*100,pl/100,\
        color='blue',label='ICON-no2mom')
 ax[1].plot((np.nanmean(WT_novgrid[:,0],axis=0)-np.nanmean(WT_1mom[:,0],axis=0))*100,pl/100,\
        color='gold',label='ICON-novgrid')
@@ -165,5 +163,5 @@ ax[1].set_yticks([800,500,300,100])
 ax[1].set_yticklabels(['800','500','300','100'])
 ax[1].tick_params(labelsize=fs)
 
-fig.savefig('./output/wT-profiles2.pdf')
+fig.savefig('../output/wT-profiles2.pdf')
 plt.show()

@@ -72,7 +72,7 @@ def resize_colorbar(event):
     cbar_ax.set_position([posn.x0 + posn.width + 0.01, posn.y0,
                           0.04, posn.height])
 
-levs = np.linspace(-1,2,30)
+levs = np.linspace(-2,3,30)
 titre = [r'ERA5 $\omega_{250}$: '+ str(zeit_era5_sub)[:16], r'ICON-2mom $\omega_{250}$: '+ str(zeit_icon_sub2)[:16],\
          r'ERA5 $\omega_{500}$: ' + str(zeit_era5_sub)[:16], r'ICON-2mom $\omega_{500}$: '+ str(zeit_icon_sub2)[:16]]
         #r'ICON-1mom $\omega_{250}$: ' + str(zeit_icon_sub)[:16], r'ICON-1mom $\omega_{250}$: ' + str(zeit_icon_sub)[:16],
@@ -104,12 +104,12 @@ for j in np.arange(2):
         ax[i,j].set_extent([55,115,-5,38],crs=ccrs.PlateCarree())
         #im.set_clim([-1,2])
         ax[i,j].coastlines()
-        plt.colorbar(im,ax=ax[i,j])
+        #plt.colorbar(im,ax=ax[i,j])
         c = c + 1
 
-#fig.tight_layout()
+fig.tight_layout()
 fig.canvas.mpl_connect('resize_event', resize_colorbar)
-#plt.colorbar(im,label=r'm s$^{-1}$',cax=cbar_ax)
+plt.colorbar(im,label=r'm s$^{-1}$',cax=cbar_ax)
 
 resize_colorbar(None)
 #fig.savefig('w-comparison_115e_0.25-0.025deg.png',bbox_inches='tight')

@@ -1,18 +1,18 @@
 #!/bin/ksh
 #SBATCH --account=bb1018
 #SBATCH --job-name=ap2pl
-#SBATCH --partition=compute2
+#SBATCH --partition=prepost
 #SBATCH --nodes=1
 #SBATCH --output=/work/bb1131/b380873/tropic_vis/logs/LOG_ap2pl.run.%j.o
 #SBATCH --error=/work/bb1131/b380873/tropic_vis/logs/LOG_ap2pl.run.%j.o
-#SBATCH --time=01:00:00
+#SBATCH --time=02:00:00
 
 # Directory and inputs to build the file names.
 basedir='/scratch/b/b380873/tropic_run5_novgrid/'
-fileprefix1='WINDTH_3D'
-fileprefix2='WT'
-lowtimestep=1
-hightimestep=12
+fileprefix1='Q'
+fileprefix2='Q'
+lowtimestep=13
+hightimestep=24
 
 for timestep in $(seq $lowtimestep $hightimestep); do
     echo $timestep
@@ -42,8 +42,8 @@ for timestep in $(seq $lowtimestep $hightimestep); do
     #pressures='90000,85000,75000,50000,25000'
 
     # Assemble the filenames and command.
-    part1='cdo -ap2pl,'
-    part2='-selvar,air_pressure,temp,omega'
+    part1='cdo -b 32 -ap2pl,'
+    #part2='-selvar,air_pressure,qi'
     inputfile=$basedir$fileprefix1'_icon_tropic_'$timestepprefix$timestep'.nc'
     outputfile=$basedir$fileprefix2'_icon_tropic_'$timestepprefix$timestep'_PL2.nc'
 
