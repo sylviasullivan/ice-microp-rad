@@ -28,13 +28,14 @@ ice/ - scripts to visualize the ice fields
 - *IWPdist_precip.py* - probability distributions of IWP filtered for different precipitation accumulation bins
 - *IWP-wDist.py* - probability distributions of IWP, w_250hPa, w_500hPa values for 1-mom and 2-mom simulations
 - *qi-field.py* - spatial map of ice mass mixing ratio
-- *qi-profiles.py* - daily-mean domain-mean profiles of ice mass mixing ratio for the 1-mom and 2-mom simulations
+- *q\*-profiles.py* - daily-mean domain-mean profiles of ice, snow, graupel, or cloud droplet mass mixing ratio for the 1-mom and 2-mom simulations
 - *qi_video.py* - make a video of the ice mass mixing ratio evolution over time
 - *tqi_video.py* - make a video of the column-integraed ice content over time
 
 optics/ - scripts to visualize the cloud optics fields
 - *cldopt_vis.py* - visualize the 2D surface plot of mass absorption coefficient (or single-scattering albedo, asymmetry parameter with modifications) as a function of ice crystal effective radius and wavelength
 - *cldopt_vis2.py* - visualize the mass absorption coefficient, single-scattering albedo, and asymmetry parameters as a function of wavelength, colored for different effective radii
+- *cldopt_vis3.py* - Baum-Yang optical properties visualization
 
 rad/ - scripts to visualize the radiative fields
 - *OLR_v_IWP.py* - visualizes the TOA (outgoing) longwave flux as a function of ice water path (IWP), needs modification re: files read
