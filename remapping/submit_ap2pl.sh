@@ -8,11 +8,11 @@
 #SBATCH --time=02:00:00
 
 # Directory and inputs to build the file names.
-basedir='/scratch/b/b380873/tropic_run5_novgrid/'
-fileprefix1='Q'
-fileprefix2='Q'
-lowtimestep=13
-hightimestep=24
+basedir='/scratch/b/b380873/reff_fix/'
+fileprefix1='CLCONV_3D'
+fileprefix2='REFF_FIX'
+lowtimestep=2
+hightimestep=2
 
 for timestep in $(seq $lowtimestep $hightimestep); do
     echo $timestep

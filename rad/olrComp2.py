@@ -8,7 +8,7 @@ from datetime import datetime
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 
 # Read in the CERES data.
-basedir = '/work/bb1131/b380873/tropic_vis/obs/CERES/'
+basedir = '/work/bb1018/b380873/tropic_vis/obs/CERES/'
 olr_file = basedir + 'CERES_SYN1deg-1H_Terra-Aqua-MODIS_Ed4.1_Subset_20170801-20170831_full-domain.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_ceres = np.abs(olr_data.toa_lw_all_1h.values)
@@ -28,7 +28,7 @@ olr_ceres_sub1 = olr_ceres[ii]   # shape = 35, 115
 zeit_ceres_sub1 = zeit_ceres[ii]
 
 # Read in the ERA5 values.
-basedir = '/work/bb1131/b380873/tropic_vis/obs/ERA5/'
+basedir = '/work/bb1018/b380873/tropic_vis/obs/ERA5/'
 olr_file = basedir + 'ERA5_OLR-20170805-20170809.nc' #'ERA5_OLR_1deg[55-170]-20170805-20170809.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_era5 = np.abs(olr_data.ttr.values)/3600
@@ -51,7 +51,7 @@ olr_era5_sub1 = olr_era5[ii]
 zeit_era5_sub1 = zeit_era5[ii]
 
 # Read in the ICON 1-mom simulation.
-basedir = '/work/bb1131/b380873/tropic_run2_output/'
+basedir = '/work/bb1018/b380873/tropic_run2_output/'
 olr_file = basedir + 'OLR_TOA_all.nc' #'OLR_TOA_all_1deg.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_icon = np.abs(olr_data.lwflxall.values)
@@ -71,7 +71,7 @@ olr_icon_sub1 = olr_icon[ii,0]
 zeit_icon_sub1 = zeit_icon[ii]
 
 # Read in the ICON 2-mom simulation.
-basedir = '/work/bb1131/b380873/tropic_run5_output/'
+basedir = '/work/bb1018/b380873/tropic_run5_output/'
 olr_file = basedir + 'OLR_120-141_0.025deg.nc' # 'OLR_120-141_1.0deg.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_icon2 = np.abs(olr_data.thb_t.values)

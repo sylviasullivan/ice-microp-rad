@@ -5,7 +5,7 @@ import numpy as np
 import sys
 
 # Read in the w file.
-basedir = '/work/bb1131/b380873/tropic_run2_output/'
+basedir = '/work/bb1018/b380873/tropic_run2_output/'
 wfi = xr.open_dataset(basedir + 'W_3D_icon_tropic_0051_remapdis_global0.025.nc')
 w = wfi.w[0]
 w_swap = np.transpose(np.array(w),axes=(1,2,0))
@@ -13,7 +13,7 @@ lats = wfi.lat
 lons = wfi.lon
 
 # Read in the different domain masks.
-basedir2 = '/work/bb1131/b380873/SilviaBucci_data/'
+basedir2 = '/work/bb1018/b380873/SilviaBucci_data/'
 f = open(basedir2 + 'MaskCartopy.pkl','rb')
 maskk = pickle.load(gzip.open(f))
 f.close()

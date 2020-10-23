@@ -6,7 +6,7 @@ from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
 
 # Cloud optical properties files.
-basedir = '/work/bb1131/b380873/rrtm/'
+basedir = '/work/bb1018/b380873/rrtm/'
 fi = basedir + 'rrtm_cldopt.nc'
 cldopts = xr.open_dataset(fi)
 

@@ -9,7 +9,7 @@ from cartopy import config
 from matplotlib import cm
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 
-basedir = '/work/bb1131/b380873/tropic_run2_output/'
+basedir = '/work/bb1018/b380873/tropic_run2_output/'
 olr_file = basedir + 'OLR_TOA_all.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_vals = np.abs(olr_data.lwflxall.values)

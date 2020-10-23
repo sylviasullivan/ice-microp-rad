@@ -10,7 +10,7 @@ print_opt = False
 print_plot1 = True
 print_plot2 = False
 
-basedir = '/work/bb1131/b380873/rrtm/'
+basedir = '/work/bb1018/b380873/rrtm/'
 fi = basedir + 'rrtm_cldopt.nc'
 cldopts = xr.open_dataset(fi)
 

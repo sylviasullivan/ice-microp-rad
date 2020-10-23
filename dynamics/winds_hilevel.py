@@ -6,7 +6,7 @@ import cartopy.crs as ccrs
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 from matplotlib import cm
 
-basedir = '/work/bb1131/b380873/tropic_run2_output/'
+basedir = '/work/bb1018/b380873/tropic_run2_output/'
 fi = basedir + 'UV_3D_icon_tropic_0051_remapdis_global2.5.nc'
 uv51 = xr.open_dataset(fi)
 lat = uv51.lat

@@ -86,7 +86,7 @@ for i in np.arange(n):
 
 # Read in the simulation values.
 # Filter for values between 25-26.5 N lat and 85-85.5 E lon and store only positive values.
-basedir = '/work/bb1131/b380873/tropic_run5_output/'
+basedir = '/work/bb1018/b380873/tropic_run5_output/'
 sims = xr.open_dataset(basedir + 'QV_QI_60-70_0.025deg_HL.nc')
 qi_s = sims.qi.sel(time=datetime(2017,8,8,6,0),lat=slice(25,26.5),lon=slice(85,85.5))
 qv_s = sims.qv.sel(time=datetime(2017,8,8,6,0),lat=slice(25,26.5),lon=slice(85,85.5))

@@ -7,7 +7,7 @@ from datetime import datetime
 import seaborn as sns
 
 # Read in the CERES data.
-basedir = '/work/bb1131/b380873/tropic_vis/obs/CERES/'
+basedir = '/work/bb1018/b380873/tropic_vis/obs/CERES/'
 olr_file = basedir + 'CERES_SYN1deg-1H_Terra-Aqua-MODIS_Ed4.1_Subset_20170801-20170831_full-domain.nc'
 olr_data = xr.open_dataset(olr_file)
 print(olr_data.dims)
@@ -23,7 +23,7 @@ ii = np.argwhere(zeit_ceres > np.datetime64(exttime))[0,0]
 olr_ceres_sub1 = np.reshape(olr_ceres[ii],(olr_ceres.shape[1]*olr_ceres.shape[2],))
 
 # Read in the ERA5 values.
-basedir = '/work/bb1131/b380873/tropic_vis/obs/ERA5/'
+basedir = '/work/bb1018/b380873/tropic_vis/obs/ERA5/'
 olr_file = basedir + 'ERA5_OLR_1deg[55-170]-20170805-20170809.nc'
 olr_data = xr.open_dataset(olr_file)
 #olr_era5 = np.abs(olr_data.ttr.values)[:,:61]/3600
@@ -39,7 +39,7 @@ ii = np.argwhere(zeit_era5 >= np.datetime64(exttime))[0,0]
 olr_era5_sub1 = np.reshape(olr_era5[ii],(olr_era5.shape[1]*olr_era5.shape[2],))
 
 # Read in the ICON-1mom simulation.
-basedir = '/work/bb1131/b380873/tropic_run2_output/'
+basedir = '/work/bb1018/b380873/tropic_run2_output/'
 olr_file = basedir + 'OLR_TOA_all.nc' # 1deg
 olr_data = xr.open_dataset(olr_file)
 olr_icon = np.abs(olr_data.lwflxall.values)[:,:61]
@@ -54,7 +54,7 @@ ii = np.argwhere(zeit_icon >= np.datetime64(exttime))[0,0]
 olr_icon_sub1 = np.reshape(olr_icon[ii,0],(olr_icon.shape[2]*olr_icon.shape[3],))
 
 # Read in the ICON-2mom simulation.
-basedir = '/work/bb1131/b380873/tropic_run5_output/'
+basedir = '/work/bb1018/b380873/tropic_run5_output/'
 olr_file2 = basedir + 'OLR_120-141_0.025deg.nc' # 1deg
 olr_data2 = xr.open_dataset(olr_file2)
 olr_icon2 = np.abs(olr_data2.thb_t.values)

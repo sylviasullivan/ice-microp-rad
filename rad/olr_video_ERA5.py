@@ -11,7 +11,7 @@ from datetime import datetime
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 
 # Read in the CERES data.
-basedir = '/work/bb1131/b380873/tropic_vis/'
+basedir = '/work/bb1018/b380873/tropic_vis/'
 olr_file = basedir + 'ERA5_OLR-20170805-20170809.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_vals = np.abs(olr_data.ttr.values)

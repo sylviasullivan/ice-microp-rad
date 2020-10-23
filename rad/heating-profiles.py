@@ -86,7 +86,7 @@ else:
 
 # Load the ERA5 heating profiles. Subtract all-sky and clear-sky values.
 # Multiply by 86400 to convert K s-1 to K day-1.
-basedir2 = '/work/bb1131/b380873/tropic_vis/obs/ERA5/'
+basedir2 = '/work/bb1018/b380873/tropic_vis/obs/ERA5/'
 vals_ERA5 = xr.open_dataset(basedir2 + 'ERA5_ddtmean_20170807-20170808_55e115e5s40n_PL.nc')
 H_ERA5 = np.zeros((24,2,120))
 vals = vals_ERA5.mttlwr.mean(dim={'lat','lon'}) - vals_ERA5.mttlwrcs.mean(dim={'lat','lon'})

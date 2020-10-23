@@ -8,7 +8,7 @@ import seaborn as sns
 
 # The CERES and ERA5 block can be read in from olrDist2.py
 # Read in the no2mom simulation.
-basedir = '/work/bb1131/b380873/tropic_run5_output/no2mom/'
+basedir = '/work/bb1018/b380873/tropic_run5_output/no2mom/'
 olr_file = basedir + 'OLR_120-140_0.025deg.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_no2mom = np.abs(olr_data.lwflxall.values)
@@ -23,7 +23,7 @@ ii = np.argwhere(zeit_no2mom > np.datetime64(exttime))[0,0]
 olr_no2mom_sub1 = np.reshape(olr_no2mom[ii,0],(olr_no2mom.shape[2]*olr_no2mom.shape[3],))
 
 # Read in the novgrid values.
-basedir = '/work/bb1131/b380873/tropic_run5_output/novgrid/'
+basedir = '/work/bb1018/b380873/tropic_run5_output/novgrid/'
 olr_file = basedir + 'OLR_120-140_0.025deg.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_novgrid = np.abs(olr_data.lwflxall.values)
@@ -38,7 +38,7 @@ ii = np.argwhere(zeit_novgrid >= np.datetime64(exttime))[0,0]
 olr_novgrid_sub1 = np.reshape(olr_novgrid[ii,0],(olr_novgrid.shape[2]*olr_novgrid.shape[3],))
 
 # Read in the ICON-1mom simulation.
-basedir = '/work/bb1131/b380873/tropic_run2_output/'
+basedir = '/work/bb1018/b380873/tropic_run2_output/'
 olr_file = basedir + 'OLR_TOA_all.nc' # 1deg
 olr_data = xr.open_dataset(olr_file)
 olr_icon = np.abs(olr_data.lwflxall.values)[:,:61]
@@ -53,7 +53,7 @@ ii = np.argwhere(zeit_icon >= np.datetime64(exttime))[0,0]
 olr_icon_sub1 = np.reshape(olr_icon[ii,0],(olr_icon.shape[2]*olr_icon.shape[3],))
 
 # Read in the ICON-2mom simulation.
-basedir = '/work/bb1131/b380873/tropic_run5_output/'
+basedir = '/work/bb1018/b380873/tropic_run5_output/'
 olr_file2 = basedir + 'OLR_120-141_0.025deg.nc' # 1deg
 olr_data2 = xr.open_dataset(olr_file2)
 olr_icon2 = np.abs(olr_data2.thb_t.values)

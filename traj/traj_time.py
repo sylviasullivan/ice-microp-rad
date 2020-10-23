@@ -7,7 +7,7 @@ import xarray as xr
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
 
-basedir = '/work/bb1131/b380873/traj_output/test2h/'
+basedir = '/work/bb1018/b380873/traj_output/test2h/'
 clams = xr.open_dataset(basedir + 'cirrus_tst00000751_p001_trim_clams.nc')
 icon = xr.open_dataset(basedir + 'traj_tst00000751_p001_trim.nc')
 clams = clams.rename({'T':'temp'})

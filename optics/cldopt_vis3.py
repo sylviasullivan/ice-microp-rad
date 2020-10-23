@@ -15,7 +15,7 @@ print_plot1 = True
 # Plot absorption coeff, single-scattering albedo, asymmetry parameter as a function of effective radius?
 print_plot2 = False
 
-basedir = '/work/bb1131/b380873/rrtm/'
+basedir = '/work/bb1018/b380873/rrtm/'
 #fi = basedir + 'baum_yang_cldopt.nc'
 fi = basedir + 'rrtm_cldopt.nc'
 cldopts = xr.open_dataset(fi)

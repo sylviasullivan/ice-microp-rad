@@ -30,9 +30,9 @@ def z_from_ml(lat_in,lon_in):
       2853,2570,2300,2043,1801,1573,1358,1158,972,801,644,503,377,267,174,98,42,10])
 
     # Read in the topography at 0.025 lat / lon grid.
-    #basedir = '/work/bb1131/b380459/TROPIC/extpar/'
+    #basedir = '/work/bb1018/b380459/TROPIC/extpar/'
     #extpar_unstructured = basedir + 'extpar_icon-grid_tropic_55e170e5s40n_R2500m_bitmap.nc'
-    basedir = '/work/bb1131/b380873/tropic_run2_output/'
+    basedir = '/work/bb1018/b380873/tropic_run2_output/'
     extpar_latlon = basedir + 'extpar_icon-grid_tropic_55e170e5s40n_R2500m_bitmap_remapdis0.025.nc'
     xp = xr.open_dataset(extpar_latlon)
     topography = xp.topography_c

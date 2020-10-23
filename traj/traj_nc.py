@@ -4,7 +4,7 @@ import netCDF4
 import glob, time
 
 # Where are the trajectory files sitting?
-basedir = '/work/bb1131/b380873/traj_output/test24h/'
+basedir = '/work/bb1018/b380873/traj_output/test24h/'
 
 # Timesteps with trajectory output
 dt = ['151'] #'601','751','901']

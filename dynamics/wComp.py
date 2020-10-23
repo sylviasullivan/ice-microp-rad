@@ -10,7 +10,7 @@ from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 execfile('../MidpointNormalize.py')
 
 # Read in the ERA5 values.
-basedir = '/work/bb1131/b380873/tropic_vis/obs/ERA5/'
+basedir = '/work/bb1018/b380873/tropic_vis/obs/ERA5/'
 w_file = basedir + 'ERA5_w_0.25deg-20170807-20170808.nc'
 w_data = xr.open_dataset(w_file)
 w250_era5 = w_data.w.values[:,0]   # The first level is 250 hPa. The second level is 500 hPa.
@@ -28,7 +28,7 @@ zeit_era5_sub = zeit_era5[ii]
 print(zeit_era5_sub)
 
 # Read in the ICON-1mom simulation at 8 August 2017 1 am.
-basedir = '/work/bb1131/b380873/tropic_run2_output/'
+basedir = '/work/bb1018/b380873/tropic_run2_output/'
 w_file = basedir + 'W_3D_icon_tropic_0061_remapdis_global0.025.nc'
 #w_file = basedir + 'w250_ALL-0051-0061.nc'
 w_data = xr.open_dataset(w_file)
@@ -42,7 +42,7 @@ zeit_icon_sub = w_data.time.values[0]
 print(zeit_icon_sub)
 
 # Read in the ICON-2mom simulation at 8 August 2017 1 am.
-basedir = '/work/bb1131/b380873/tropic_run5_output/'
+basedir = '/work/bb1018/b380873/tropic_run5_output/'
 #basedir = '/scratch/b/b380873/tropic_run5/'
 w_file = basedir + 'OMEGA_60-63_0.025deg_PL.nc'
 #w_file = basedir + 'W_icon_tropic_0061remapdis_0.025_PL.nc'

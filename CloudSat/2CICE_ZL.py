@@ -9,7 +9,7 @@ import numpy as np
 from datetime import datetime,timedelta
 import sys,time
 
-basedir = '/work/bb1131/b380873/tropic_vis/obs/2C-ICE/'
+basedir = '/work/bb1018/b380873/tropic_vis/obs/2C-ICE/'
 writenpy = True
 # Which model timesteps are being used for comparison?
 dt1 = '0043'

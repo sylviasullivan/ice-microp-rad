@@ -1,5 +1,5 @@
 # run in conda environment pyhdf
-# /work/bb1131/b380459/TROPIC/extpar/extpar_icon-grid_tropic_55e170e5s40n_R2500m_bitmap.nc
+# /work/bb1018/b380459/TROPIC/extpar/extpar_icon-grid_tropic_55e170e5s40n_R2500m_bitmap.nc
 # as input
 import numpy as np
 from matplotlib.collections import LineCollection
@@ -7,7 +7,7 @@ from matplotlib import cm
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 import sys
-sys.path.insert(1,'/work/bb1131/b380873/tropic_vis/CloudSat/')
+sys.path.insert(1,'/work/bb1018/b380873/tropic_vis/CloudSat/')
 import xarray as xr
 import matplotlib.colors as colors
 from CloudSat_read import read_cloudsatcalipso_hdf_file
@@ -44,7 +44,7 @@ def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=256):
     return(new_cmap)
 
 # Read in the flight track from Martina Kraemer's data
-basedir = '/work/bb1131/b380873/tropic_vis/'
+basedir = '/work/bb1018/b380873/tropic_vis/'
 scfi = basedir + 'obs/stratoclim2017.geophysika.0808_1.master.ci_eval.nc'
 sc_data = xr.open_dataset(scfi)
 lat_sc = sc_data['BEST:LAT'].values

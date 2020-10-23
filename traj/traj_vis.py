@@ -14,7 +14,7 @@ import cartopy.crs as ccrs
 
 timestep = sys.argv[1]
 directory = sys.argv[2]
-basedir = '/work/bb1131/b380873/traj_output/' + directory + '/'
+basedir = '/work/bb1018/b380873/traj_output/' + directory + '/'
 pi = 3.141592653589793238
 os.environ["CARTOPY_USER_BACKGROUNDS"] = "/pf/b/b380873/conda-envs/ncplot/lib/python3.7/site-packages/cartopy/data/raster/natural_earth"
 

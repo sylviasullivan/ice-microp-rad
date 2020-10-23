@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import sys
 
-basedir = '/work/bb1131/b380873/tropic_run2_output/'
+basedir = '/work/bb1018/b380873/tropic_run2_output/'
 OLR_fi = xr.open_dataset(basedir + 'OLR_120-132_0.025deg.nc')
 TQI_fi = xr.open_dataset(basedir + 'TQI_ALL_0.025.nc')
 W_fi = xr.open_dataset(basedir + 'W_ALL-0051-0061_0.025.nc')
@@ -109,7 +109,7 @@ sns.distplot(OLR_4,bins=np.linspace(d,u,b),kde=True,hist=False,color=farbe[0],
 ax[0,2].set_xlim([d-20,u])
 ax[0,2].legend(loc='upper left',fontsize=8)
 
-basedir = '/work/bb1131/b380873/tropic_run5_output/'
+basedir = '/work/bb1018/b380873/tropic_run5_output/'
 OLR_fi = xr.open_dataset(basedir + 'OLR_120-141_0.025deg.nc')
 TQI_fi = xr.open_dataset(basedir + 'TQI_120-141_0.025deg.nc')
 W_fi = xr.open_dataset(basedir + 'W_60-70_0.025deg_plev.nc')

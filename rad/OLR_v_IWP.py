@@ -6,7 +6,7 @@ import scipy.stats
 from matplotlib import cm
 import sys
 
-basedir = '/work/bb1131/b380873/tropic_run2_output/'
+basedir = '/work/bb1018/b380873/tropic_run2_output/'
 fi1 = basedir + 'LWFLXALL_0085_remapdis_global0.025.nc'
 lwfi = xr.open_dataset(fi1).lwflxall[0,0,::10,::10]
 lwfi = -1*np.reshape(np.array(lwfi),(180*460,))

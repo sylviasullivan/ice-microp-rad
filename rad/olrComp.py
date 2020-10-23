@@ -9,7 +9,7 @@ from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 
 # The CERES and ERA5 block can be read in and arranged from olrComp2.py
 # Read in the ICON no2mom simulation.
-basedir = '/work/bb1131/b380873/tropic_run5_output/no2mom/'
+basedir = '/work/bb1018/b380873/tropic_run5_output/no2mom/'
 olr_file = basedir + 'OLR_120-140_0.025deg.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_no2mom = np.abs(olr_data.lwflxall.values)
@@ -29,7 +29,7 @@ olr_no2mom_sub1 = olr_no2mom[ii,0]
 zeit_no2mom_sub1 = zeit_no2mom[ii]
 
 # Read in the ICON novgrid simulation.
-basedir = '/work/bb1131/b380873/tropic_run5_output/novgrid/'
+basedir = '/work/bb1018/b380873/tropic_run5_output/novgrid/'
 olr_file = basedir + 'OLR_120-140_0.025deg.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_novgrid = np.abs(olr_data.lwflxall.values)
@@ -49,7 +49,7 @@ olr_novgrid_sub1 = olr_novgrid[ii,0]
 zeit_novgrid_sub1 = zeit_novgrid[ii]
 
 # Read in the ICON 1-mom simulation.
-basedir = '/work/bb1131/b380873/tropic_run2_output/'
+basedir = '/work/bb1018/b380873/tropic_run2_output/'
 olr_file = basedir + 'OLR_TOA_all.nc' #'OLR_TOA_all_1deg.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_icon = np.abs(olr_data.lwflxall.values)
@@ -69,7 +69,7 @@ olr_icon_sub1 = olr_icon[ii,0]
 zeit_icon_sub1 = zeit_icon[ii]
 
 # Read in the ICON 2-mom simulation.
-basedir = '/work/bb1131/b380873/tropic_run5_output/'
+basedir = '/work/bb1018/b380873/tropic_run5_output/'
 olr_file = basedir + 'OLR_120-141_0.025deg.nc' # 'OLR_120-141_1.0deg.nc'
 olr_data = xr.open_dataset(olr_file)
 olr_icon2 = np.abs(olr_data.thb_t.values)

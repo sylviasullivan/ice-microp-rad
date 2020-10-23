@@ -26,7 +26,7 @@ for i in np.arange(1999,2011):
        w_12km_Manus.extend(w[:,h3])
 
 # Read in the updraft velocities from the simulation.
-basedir = '/work/bb1131/b380873/tropic_run2_output/'
+basedir = '/work/bb1018/b380873/tropic_run2_output/'
 w_8km_ICON = []
 w_10km_ICON = []
 w_12km_ICON = []

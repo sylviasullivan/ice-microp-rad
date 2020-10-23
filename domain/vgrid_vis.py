@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
 
-basedir = '/work/bb1131/b380873/'
+basedir = '/work/bb1018/b380873/'
 vgrid = xr.open_dataset(basedir + 'vgrid_icon-grid_tropic_55e115e5s40n.nc')
 vct_a0 = vgrid['vct_a'].values
 diff1 = np.zeros((vct_a0.shape[0]-1,2))
