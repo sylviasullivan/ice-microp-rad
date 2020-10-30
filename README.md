@@ -65,7 +65,9 @@ traj/ - scripts to visualize the trajectory outputs
 - *qv_time.py* - compare the mean specific humidity along CLaMS-ice and ICON trajectories
 - *traj_nc.py* - trajectory file postprocessing script
 - *traj_time.py, traj_time2.py* - visualize the ice mass mixing ratio in the CLaMS-ice versus ICON trajectory over time (the first also shows filtering for same trajectory mean temperature)
+- *traj_psd.py* - some utilities from Christian Rolf to smooth and calculate power spectral densities from trajectory output
 - *traj_vis.py* - visualize the trajectories colored by altitude over a land type-colored map
+- *psd_driver.py* - visualize the temperature and vertical velocity power spectral densities from trajectory output
 
 utilities 
 - *convertTXTNC.py* - generate nc files from the grid description txt file
