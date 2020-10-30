@@ -9,12 +9,13 @@ import matplotlib.colors as colors
 import matplotlib.cm as cmx
 
 class traj_psd(object):
+
     def __init__(self, temp = None, name = None, path = None, plotname = None):
 
         self.temp = [temp]
 
-        self.dt_on = 10*60
-        self.window_length= 11
+        self.dt_on = 24 # What is the resolution of the trajectories?
+        self.window_length = 3
         self.Fnyq = list()
         self.Pxx = list()
         self.Pxx_smooth = list()
@@ -88,7 +89,7 @@ class traj_psd(object):
         if window == 'flat': #moving average
             w=np.ones(window_len,'d')
         else:
-            w=eval('numpy.'+window+'(window_len)')
+            w=eval('np.'+window+'(window_len)')  # >> sylvia_20201030 numpy -> np
 
         y=np.convolve(w/w.sum(),s,mode='valid')
         return y
@@ -108,10 +109,11 @@ class traj_psd(object):
             #smoothing
             self.Pxx_smooth.append(self.smooth(Pxx, window_len = self.window_length, window = 'flat')[int((self.window_length-1)/2):-int((self.window_length-1)/2)])
 
-        return None;
+        return self.f[0], self.Pxx_smooth[0], self.Fnyq
+        #return None; >> sylvia_20201030, Outputting the frequencies and PSD directly now
 
     def plt_psd(self):
-        print(len(self.Pxx_smooth))
+
         fig = plt.figure()
         ax = fig.add_subplot(111)
 
@@ -147,10 +149,12 @@ class traj_psd(object):
             plt.title(self.plotname)
 
         if self.path != None and self.name != None:
-            plt.savefig(self.path + '/' + self.plotname + '.png', dpi = 300, bbox_inches='tight')
+            print('Hallo')
+            #plt.savefig(self.path + '/' + self.plotname + '.png', dpi = 300, bbox_inches='tight')
             #plt.savefig(self.path + '/' + self.plotname + '.pdf', bbox_inches='tight')
         else:
             plt.show()
+        plt.show()
 
         return None;
 
