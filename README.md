@@ -50,6 +50,7 @@ rad/ - scripts to visualize the radiative fields
 - *olrDist_IWP-w.py* - OLR probability density filtered by bins of IWP, w_250hPa, or w_500hPa
 - *olrDist_w.py* - 
 - *olr_video3.py, olr_video_CERES.py, olr_video_ERA5.py* - make a video of the OLR field from the ICON simulation, CERES measurements, or ERA5 values over time
+- *reff_fix.ipynb* - visualize mean profiles of droplet and crystal effective radius or number concentrations
 
 remapping/ - scripts to perform vertical or horizontal remapping
 - *AP_to_HL.sh* - uses the ap2hl command to vertically regrid files to altitudes from model levels, given file prefixes and first and last timesteps (part2 variable can be used to extract certain variables as well)
@@ -62,9 +63,9 @@ remapping/ - scripts to perform vertical or horizontal remapping
 
 traj/ - scripts to visualize the trajectory outputs
 - *lagranto_vis.py* - attempt to use the lagranto.plotting package
-- *qv_time.py* - compare the mean specific humidity along CLaMS-ice and ICON trajectories
+- *t_pdf.py* - PDF of temperature and updraft fluctuations along the ICON trajectories
+- *total_water.ipynb* - one-to-one or relative difference plots of total water (qv+qi) in ICON versus CLaMS-ice simulations
 - *traj_nc.py* - trajectory file postprocessing script
-- *traj_time.py, traj_time2.py* - visualize the ice mass mixing ratio in the CLaMS-ice versus ICON trajectory over time (the first also shows filtering for same trajectory mean temperature)
 - *traj_psd.py* - some utilities from Christian Rolf to smooth and calculate power spectral densities from trajectory output
 - *traj_vis.py* - visualize the trajectories colored by altitude over a land type-colored map
 - *psd_driver.py* - visualize the temperature and vertical velocity power spectral densities from trajectory output
