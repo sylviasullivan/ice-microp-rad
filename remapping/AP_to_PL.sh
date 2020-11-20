@@ -5,7 +5,8 @@
 # given in PMEAN_*-*.txt
 
 # Directory and inputs to build the file names.
-basedir='/scratch/b/b380873/tropic_run5_no2mom/'
+basedir='/scratch/b/b380873/tropic_run7_rad2mom/'
+#'reff_fix/24h_FALSE/'
 echo 'File prefix, e.g. WINDTH_3D, RAD_3D'
 read fileprefix
 echo 'First timestep, e.g. 1, 25, 52'

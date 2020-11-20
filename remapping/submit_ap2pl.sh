@@ -1,18 +1,18 @@
 #!/bin/ksh
 #SBATCH --account=bb1018
 #SBATCH --job-name=ap2pl
-#SBATCH --partition=prepost
-#SBATCH --nodes=1
-#SBATCH --output=/work/bb1131/b380873/tropic_vis/logs/LOG_ap2pl.run.%j.o
-#SBATCH --error=/work/bb1131/b380873/tropic_vis/logs/LOG_ap2pl.run.%j.o
+#SBATCH --partition=compute2
+#SBATCH --nodes=8
+#SBATCH --output=/work/bb1018/b380873/tropic_vis/logs/LOG_ap2pl.run.%j.o
+#SBATCH --error=/work/bb1018/b380873/tropic_vis/logs/LOG_ap2pl.run.%j.o
 #SBATCH --time=02:00:00
 
 # Directory and inputs to build the file names.
-basedir='/scratch/b/b380873/reff_fix/'
-fileprefix1='CLCONV_3D'
-fileprefix2='REFF_FIX'
-lowtimestep=2
-hightimestep=2
+basedir='/scratch/b/b380873/tropic_run8_pda/'
+fileprefix1='WINDTH_3D'
+fileprefix2='OMEGA'
+lowtimestep=1
+hightimestep=24
 
 for timestep in $(seq $lowtimestep $hightimestep); do
     echo $timestep
@@ -43,7 +43,7 @@ for timestep in $(seq $lowtimestep $hightimestep); do
 
     # Assemble the filenames and command.
     part1='cdo -b 32 -ap2pl,'
-    #part2='-selvar,air_pressure,qi'
+    part2='-selvar,pres_sfc,air_pressure,temp,omega'
     inputfile=$basedir$fileprefix1'_icon_tropic_'$timestepprefix$timestep'.nc'
     outputfile=$basedir$fileprefix2'_icon_tropic_'$timestepprefix$timestep'_PL2.nc'
 
