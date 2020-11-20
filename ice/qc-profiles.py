@@ -6,9 +6,8 @@ import sys
 # Which set of pressure levels to look at?
 suffix1 = '_PL2' # '_PL'
 suffix2 = '_PL2'
-# Which simulations to look at? Order is 1mom, no2mom, novgrid, 2mom, run6 (Atest)
+# Which simulations to look at? Order is 1mom, no2mom, novgrid / radnovgrid, 2mom / rad2mom, run6 (Atest) / PDA
 arr = [False, False, False, False, False]
-#arr = [True, True, True, True, True]
 
 def file_prefix(j):
     if len(str(j)) == 1:
@@ -56,19 +55,27 @@ else:
 
 if arr[2] == True:
    QC_novgrid = meanProfile('/scratch/b/b380873/tropic_run5_novgrid/','novgrid',0,1,24,'Q')
+   QC_radnovgrid = meanProfile('/scratch/b/b380873/tropic_run7_radnovgrid/','radnovgrid',0,1,24,'CLCONV_3D')
 else:
    QC_novgrid = np.load('../output/QC_novgrid' + suffix2 + '.npy')
+   QC_radnovgrid = np.load('../output/QC_radnovgrid' + suffix2 + '.npy')
 
 
 if arr[3] == True:
    QC_2mom = meanProfile('/scratch/b/b380873/tropic_run5/','2mom',0,49,70,'CLCONV_3D')
+   QC_rad2mom = meanProfile('/scratch/b/b380873/tropic_run7_rad2mom/','rad2mom',0,1,24,'CLCONV_3D')
 else:
    QC_2mom = np.load('../output/QC_2mom' + suffix2 + '.npy')
+   QC_rad2mom = np.load('../output/QC_rad2mom' + suffix2 + '.npy')
+
 
 if arr[4] == True:
    QC_Atest = meanProfile('/scratch/b/b380873/tropic_run6/','Atest',0,1,23,'CLCONV_3D')
+   QC_PDA = meanProfile('/scratch/b/b380873/tropic_run8_pda/','PDA',0,1,24,'CLCONV_3D')
 else:
    QC_Atest = np.load('../output/QC_Atest' + suffix2 + '.npy')
+   QC_PDA = np.load('../output/QC_PDA' + suffix2 + '.npy')
+
 
 # Retrieve the pressure levels
 basedir = '/scratch/b/b380873/tropic_run5/'
@@ -102,6 +109,9 @@ i = np.argmax(np.nanmean(QC_novgrid,axis=0))
 plt.plot([0,m*1000],[pl[i]/100,pl[i]/100],lw=0.5,ls='--',color='gold')
 
 plt.plot(np.nanmean(QC_Atest,axis=0)*1000,pl/100,color='black',label='ICON-Atest')
+plt.plot(np.nanmean(QC_rad2mom,axis=0)*1000,pl/100,color='purple',label='ICON-rad2mom')
+plt.plot(np.nanmean(QC_radnovgrid,axis=0)*1000,pl/100,color='purple',linestyle='--',label='ICON-radnovgrid')
+plt.plot(np.nanmean(QC_PDA,axis=0)*1000,pl/100,color='pink',label='ICON-PDA')
 
 plt.plot([0,0],[50,800],lw=0.75,linestyle='--',color='k')
 plt.ylabel('Pressure [hPa]',fontsize=fs)
@@ -114,5 +124,5 @@ plt.gca().set_yticks([800,500,300,100])
 plt.gca().set_yticklabels(['800','500','300','100'])
 plt.tick_params(labelsize=fs)
 
-fig.savefig('../output/qc-profiles.pdf')
+#fig.savefig('../output/qc-profiles_radsim.pdf')
 plt.show()

@@ -6,9 +6,9 @@ import sys
 # Which set of pressure levels to look at?
 suffix1 = '_PL2' # '_PL'
 suffix2 = '_PL2'
-# Which simulations to look at? Order is 1mom, no2mom, novgrid, 2mom, run6 (Atest)
-#arr = [False, False, False, False, False]
-arr = [False, False, False, False, False]
+# Which simulations to look at? Order is 1mom, no2mom, novgrid / radnovgrid, 2mom / rad2mom, run6 (Atest) / PDA
+arr = [False, False, False, False, True]
+#arr = [True, True, True, True, True]
 
 def file_prefix(j):
     if len(str(j)) == 1:
@@ -55,20 +55,26 @@ else:
 
 
 if arr[2] == True:
-   QS_novgrid = meanProfile('/scratch/b/b380873/tropic_run5_novgrid/','novgrid',0,1,24,'Q')
+   #QS_novgrid = meanProfile('/scratch/b/b380873/tropic_run5_novgrid/','novgrid',0,1,24,'Q')
+   QS_radnovgrid = meanProfile('/scratch/b/b380873/tropic_run7_radnovgrid/','radnovgrid',0,1,24,'CLCONV_3D')
 else:
    QS_novgrid = np.load('../output/QS_novgrid' + suffix2 + '.npy')
-
+   QS_radnovgrid = np.load('../output/QS_radnovgrid' + suffix2 + '.npy')
 
 if arr[3] == True:
+   QS_rad2mom = meanProfile('/scratch/b/b380873/tropic_run7_rad2mom/','rad2mom',0,1,24,'CLCONV_3D')
    QS_2mom = meanProfile('/scratch/b/b380873/tropic_run5/','2mom',0,49,70,'CLCONV_3D')
 else:
+   QS_rad2mom = np.load('../output/QS_rad2mom' + suffix2 + '.npy')
    QS_2mom = np.load('../output/QS_2mom' + suffix2 + '.npy')
 
 if arr[4] == True:
-   QS_Atest = meanProfile('/scratch/b/b380873/tropic_run6/','Atest',0,1,23,'CLCONV_3D')
+   #QS_Atest = meanProfile('/scratch/b/b380873/tropic_run6/','Atest',0,1,23,'CLCONV_3D')
+   QS_PDA = meanProfile('/scratch/b/b380873/tropic_run8_pda/','PDA',0,1,24,'CLCONV_3D')
 else:
    QS_Atest = np.load('../output/QS_Atest' + suffix2 + '.npy')
+   QS_PDA = np.load('../output/QS_PDA' + suffix2 + '.npy')
+
 
 # Retrieve the pressure levels
 basedir = '/scratch/b/b380873/tropic_run5/'
@@ -101,7 +107,10 @@ m = np.nanmean(QS_novgrid,axis=0).max()
 i = np.argmax(np.nanmean(QS_novgrid,axis=0))
 plt.plot([0,m*1000],[pl[i]/100,pl[i]/100],lw=0.5,ls='--',color='gold')
 
-#plt.plot(np.nanmean(QS_Atest,axis=0)*1000,pl/100,color='black',label='ICON-Atest')
+plt.plot(np.nanmean(QS_Atest,axis=0)*1000,pl/100,color='black',label='ICON-Atest')
+plt.plot(np.nanmean(QS_rad2mom,axis=0)*1000,pl/100,color='purple',label='ICON-rad2mom')
+plt.plot(np.nanmean(QS_radnovgrid,axis=0)*1000,pl/100,color='purple',label='ICON-radnovgrid')
+plt.plot(np.nanmean(QS_PDA,axis=0)*1000,pl/100,color='purple',label='ICON-PDA')
 
 plt.plot([0,0],[50,800],lw=0.75,linestyle='--',color='k')
 plt.ylabel('Pressure [hPa]',fontsize=fs)
@@ -114,5 +123,5 @@ plt.gca().set_yticks([800,500,300,100])
 plt.gca().set_yticklabels(['800','500','300','100'])
 plt.tick_params(labelsize=fs)
 
-fig.savefig('../output/qs-profiles2.pdf')
+#fig.savefig('../output/qs-profiles_radsim.pdf')
 plt.show()

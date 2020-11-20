@@ -7,8 +7,8 @@ import sys
 suffix1 = '_PL2' # '_PL'
 suffix2 = '_PL2'
 # Which simulations to look at? Order is 1mom, no2mom, novgrid, 2mom
-arr = [False, False, False, False]
-#arr = [True, True, True, True]
+#arr = [False, False, False, False]
+arr = [False, False, False, True]
 
 def file_prefix(j):
     if len(str(j)) == 1:
@@ -20,76 +20,52 @@ def file_prefix(j):
     else:
        return 'Inappropriate length of input to file_prefix'
 
-# How many vertical levels depends on which set we look at
-if suffix1 == '_PL2':
-   c = 120
-elif suffix1 == '_PL':
-   c = 18
+# basedir is the base directory where the nc files are found.
+# tag is how to label the output npy.
+# f is the fraction of high cloud coveraged required.
+# startindx and endinx are the files over which to iterate.
+def meanProfile(basedir, tag, f, startindx, endindx, fileprefix):
+    # How many vertical levels depends on which set we look at
+    if suffix1 == '_PL2':
+       c = 120
+    elif suffix1 == '_PL':
+       c = 18
+    WT = np.zeros((2,24,c))
 
-WT_1mom = np.zeros((24,2,c))
-WT_2mom = np.zeros((24,2,c))
-WT_no2mom = np.zeros((12,2,c))
-WT_novgrid = np.zeros((12,2,c))
+    for i in np.arange(startindx,endindx):
+        print(i)
+        prefix = file_prefix(i)
+        w = xr.open_dataset(basedir + fileprefix + '_icon_tropic_' + prefix + str(i) + suffix1 + '.nc')
+        clch = xr.open_dataset(basedir + 'CLCONV_2D_icon_tropic_' + prefix + str(i) + '.nc').clch.isel(time=0,lev=0)
+        WT[0,i-startindx] = w.omega.isel(time=0).where(clch > f). mean(dim={'ncells'})
+        WT[1,i-startindx] = w.temp.isel(time=0).where(clch > f). mean(dim={'ncells'})
 
-# Which fraction of high cloud coverage are you requiring?
-f = 0
+    print('Saving mean pressure velocity and temperature from ' + basedir + '...')
+    np.save('../output/WT_' + tag + '_' + suffix2 + '.npy',WT)
+    return WT
 
 if arr[0] == True:
-   for i in np.arange(1,24):
-       print(i)
-       basedir = '/scratch/b/b380873/tropic_run2/'
-       prefix = file_prefix(i)
-       flx = xr.open_dataset(basedir + 'WT_icon_tropic_' + prefix + str(i) + suffix1 + '.nc')
-       clch = xr.open_dataset(basedir + 'CLCONV_2D_icon_tropic_' + prefix + str(i) + '.nc').clch.isel(time=0,lev=0)
-       WT_1mom[i-1,0] = flx.omega.isel(time=0).where(clch > f).mean(dim={'ncells'})
-       WT_1mom[i-1,1] = flx.temp.isel(time=0).where(clch > f).mean(dim={'ncells'})
-   print('Saving 1mom omega and T profiles...')
-   np.save('../output/WT_1mom' + suffix2 + '.npy',WT_1mom)
+   WT_1mom = meanProfile('/scratch/b/b380873/tropic_run2/','1mom',0,1,24,'WT')
 else:
    WT_1mom = np.load('../output/WT_1mom' + suffix2 + '.npy')
 
 
 if arr[1] == True:
-   for i in np.arange(1,13):
-       print(i)
-       basedir = '/scratch/b/b380873/tropic_run5_no2mom/'
-       prefix = file_prefix(i)
-       flx = xr.open_dataset(basedir + 'WT_icon_tropic_' + prefix + str(i) + suffix1 + '.nc')
-       clch = xr.open_dataset(basedir + 'CLCONV_2D_icon_tropic_' + prefix + str(i) + '.nc').clch.isel(time=0,lev=0)
-       WT_no2mom[i-1,0] = flx.omega.isel(time=0).where(clch > f).mean(dim={'ncells'})
-       WT_no2mom[i-1,1] = flx.temp.isel(time=0).where(clch > f).mean(dim={'ncells'})
-   print('Saving no2mom fluxes...')
-   np.save('../output/WT_no2mom' + suffix2 + '.npy',WT_no2mom)
+   WT_no2mom = meanProfile('/scratch/b/b380873/tropic_run5_no2mom/','no2mom',0,1,24,'WT')
 else:
    WT_no2mom = np.load('../output/WT_no2mom' + suffix2 + '.npy')
 
 
 if arr[2] == True:
-   for i in np.arange(1,13):
-       print(i)
-       basedir = '/scratch/b/b380873/tropic_run5_novgrid/'
-       prefix = file_prefix(i)
-       flx = xr.open_dataset(basedir + 'WT_icon_tropic_' + prefix + str(i) + suffix1 + '.nc')
-       clch = xr.open_dataset(basedir + 'CLCONV_2D_icon_tropic_' + prefix + str(i) + '.nc').clch.isel(time=0,lev=0)
-       WT_novgrid[i-1,0] = flx.omega.isel(time=0).where(clch > f).mean(dim={'ncells'})
-       WT_novgrid[i-1,1] = flx.temp.isel(time=0).where(clch > f).mean(dim={'ncells'})
-   print('Saving novgrid fluxes...')
-   np.save('../output/WT_novgrid' + suffix2 + '.npy',WT_novgrid)
+   #WT_novgrid = meanProfile('/scratch/b/b380873/tropic_run5_novgrid/','novgrid',0,1,24,'WT')
+   WT_radnovgrid = meanProfile('/scratch/b/b380873/tropic_run7_radnovgrid/','radnovgrid',0,1,24,'WT')
 else:
    WT_novgrid = np.load('../output/WT_novgrid' + suffix2 + '.npy')
 
 
 if arr[3] == True:
-   for i in np.arange(48,72):
-       print(i)
-       basedir = '/scratch/b/b380873/tropic_run5/'
-       prefix = file_prefix(i)
-       flx = xr.open_dataset(basedir + 'WT_icon_tropic_' + prefix + str(i) + suffix1 + '.nc')
-       clch = xr.open_dataset(basedir + 'CLCONV_2D_icon_tropic_' + prefix + str(i) + '.nc').clch.isel(time=0,lev=0)
-       WT_2mom[i-48,0] = flx.omega.isel(time=0).where(clch > f).mean(dim={'ncells'})
-       WT_2mom[i-48,1] = flx.temp.isel(time=0).where(clch > f).mean(dim={'ncells'})
-   print('Saving 2mom fluxes...')
-   np.save('../output/WT_2mom' + suffix2 + '.npy',WT_2mom)
+   #WT_2mom = meanProfile('/scratch/b/b380873/tropic_run5/','2mom',0,48,72,'WT')
+   WT_rad2mom = meanProfile('/scratch/b/b380873/tropic_run7_rad2mom/','rad2mom',0,1,24,'WT')
 else:
    WT_2mom = np.load('../output/WT_2mom' + suffix2 + '.npy')
 
