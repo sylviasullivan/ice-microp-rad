@@ -77,8 +77,8 @@ else:
    QI_PDA = np.load('../output/QI_PDA' + suffix2 + '.npy')
 
 # Retrieve the pressure levels
-basedir = '/scratch/b/b380873/tropic_run5/'
-flx = xr.open_dataset(basedir + 'FLX_icon_tropic_0049' + suffix1 + '.nc')
+basedir = '/scratch/b/b380873/tropic_run7_rad2mom/'
+flx = xr.open_dataset(basedir + 'FLX_icon_tropic_0001' + suffix1 + '.nc')
 pl = flx.plev_2
 
 fs = 13
@@ -110,7 +110,7 @@ plt.plot([0,m*1000],[pl[i]/100,pl[i]/100],lw=0.5,ls='--',color='gold')
 plt.plot(np.nanmean(QI_Atest,axis=0)*1000,pl/100,color='black',label='ICON-Atest')
 plt.plot(np.nanmean(QI_rad2mom,axis=0)*1000,pl/100,color='purple',label='ICON-rad2mom')
 plt.plot(np.nanmean(QI_radnovgrid,axis=0)*1000,pl/100,color='purple',linestyle='--',label='ICON-radnovgrid')
-plt.plot(np.nanmean(QI_PDA,axis=0)*1000,pl/100,color='pink',label='ICON-PDA')
+#plt.plot(np.nanmean(QI_PDA,axis=0)*1000,pl/100,color='pink',label='ICON-PDA')
 
 plt.plot([0,0],[50,800],lw=0.75,linestyle='--',color='k')
 plt.ylabel('Pressure [hPa]',fontsize=fs)
@@ -123,5 +123,5 @@ plt.gca().set_yticks([800,500,300,100])
 plt.gca().set_yticklabels(['800','500','300','100'])
 plt.tick_params(labelsize=fs)
 
-#fig.savefig('../output/qi-profiles_radsim.pdf')
+fig.savefig('../output/qi-profiles_radsim.pdf')
 plt.show()

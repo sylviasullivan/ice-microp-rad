@@ -12,3 +12,5 @@ obs/
 logs/
 *.pyc
 output/
+rad/amip_cloud_radheating_comparison_mpi_lmd_icon.ipynb
+rad/amip_cloud_radheating_AMA.ipynb

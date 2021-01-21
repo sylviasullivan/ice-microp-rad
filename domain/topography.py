@@ -103,5 +103,5 @@ _, _, lon_2cice, lat_2cice, zeit_2cice = read_cloudsatcalipso_hdf_file(CSfi,'IWC
 xx2,yy2 = m(lon_2cice, lat_2cice)
 m.plot(xx2,yy2,color='red')
 
-fig.savefig('../output/topography_flight_track_CloudSat-115E.png',bbox_inches='tight',dpi=100)
+#fig.savefig('../output/topography_flight_track_CloudSat-115E.png',bbox_inches='tight',dpi=100)
 plt.show(block=True)
