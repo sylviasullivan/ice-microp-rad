@@ -4,28 +4,40 @@ import netCDF4
 import glob, time
 
 # Where are the trajectory files sitting?
-basedir = '/work/bb1018/b380873/traj_output/test24h/'
+#basedir = '/work/bb1018/b380873/traj_output/test24h/'
+basedir = '/work/bb1018/b380873/traj_output/full60h_fast/'
 
 # Timesteps with trajectory output
-dt = ['151'] #'601','751','901']
+dt = ['450'] # ['151','601','751','901']
 fi_list = []
 for t in dt:
     fi_list += glob.glob(basedir + 'traj_tst00000' + t + '_p*.nc')
 
-vunits = ['','rad','rad','m','m s-1','kg m-3','K','Pa','kg kg-1','kg kg-1','kg-1','kg kg-1','kg-1','kg kg-1',\
-          'kg-1','kg kg-1','kg-1','kg kg-1','kg-1','','s']
-lname = ['trajectory index','deg longitude E','deg latitude N','altitude','vertical velocity',\
-         'air density','air temperature','air pressure','vapor mass mixing ratio','ice mass mixing ratio',\
-         'ice crystal number conc','liquid water mass mixing ratio','cloud droplet number conc',\
-         'snow mass mixing ratio','snow number conc','rain mass mixing ratio','rain drop number conc',\
-         'graupel mass mixing ratio','graupel number conc','grid cell index','time after the simulation start']
+if 'test' in basedir:
+   vunits = ['','rad','rad','m','m s-1','kg m-3','K','Pa','kg kg-1','kg kg-1','kg-1','kg kg-1','kg-1','kg kg-1',\
+             'kg-1','kg kg-1','kg-1','kg kg-1','kg-1','','s']
+   lname = ['trajectory index','deg longitude E','deg latitude N','altitude','vertical velocity',\
+            'air density','air temperature','air pressure','vapor mass mixing ratio','ice mass mixing ratio',\
+            'ice crystal number conc','liquid water mass mixing ratio','cloud droplet number conc',\
+            'snow mass mixing ratio','snow number conc','rain mass mixing ratio','rain drop number conc',\
+            'graupel mass mixing ratio','graupel number conc','grid cell index','time after the simulation start']
+else:
+   vunits = ['','rad','rad','m','m s-1','kg m-3','K','Pa','kg kg-1','kg kg-1','kg-1','kg kg-1','kg-1','kg kg-1',\
+             'kg-1','kg kg-1','kg-1','kg kg-1','kg-1','kg-1','kg-1','kg kg-1','kg kg-1','','s']
+   lname = ['trajectory index','deg longitude E','deg latitude N','altitude','vertical velocity',\
+            'air density','air temperature','air pressure','vapor mass mixing ratio','ice mass mixing ratio',\
+            'ice crystal number conc','liquid water mass mixing ratio','cloud droplet number conc',\
+            'snow mass mixing ratio','snow number conc','rain mass mixing ratio','rain drop number conc',\
+            'graupel mass mixing ratio','graupel number conc','ice sedimentation mass flux in',\
+            'ice sedimentation mass flux out','ice sedimentation number flux in','ice sedimentation number flux out',\
+            'grid cell index','time after the simulation start']
 
 for f in fi_list:
     # Take the patch 1 file as a sample
     fi = xr.open_dataset(f)
     # Find indices where the grid != 0.
     xs, ys = np.where(fi.alt.values != 0)
-    print('time (after switch): ' + str(max(xs)) + ' id (after switch): ' + str(max(ys)))
+    print('time: ' + str(max(xs)) + ' id: ' + str(max(ys)) + ' (assuming dims are not switched)')
 
     # Crop all files according to the xs and ys indices.
     fi2 = xr.Dataset()       # updated Dataset
@@ -48,3 +60,4 @@ for f in fi_list:
 
     fi2.to_netcdf(f[:-3] + '_trim.nc')
     print('Saving ' + f[:-3] + '_trim.nc')
+

@@ -25,7 +25,8 @@ def rad2deg(x):
 # Dimensions here are [patches], [timesteps], [trajs]
 fi_list = glob.glob(basedir + 'traj_tst00000' + timestep + '_p*.nc')
 # Tells you how many of the files in the directory to visualize.
-fi_list = fi_list[:1]
+p1 = 6; p2 = 7
+fi_list = fi_list[p1:p2]
 patches = len(fi_list)
 if directory == 'test2h':
    timesteps = xr.open_dataset(fi_list[0]).dims['time_step']
@@ -80,12 +81,12 @@ if(plotornot):
     gl.xlabel_style = {'size':fs}
     gl.ylabel_style = {'size':fs}
 
-    ax.set_title('Files p001 - p00' + str(j+1),y=1.01)
+    ax.set_title('File p00' + str(p1+1) + ' - 24h',y=1.01)  # str(j+1)
     ax.set_xlabel(r'Latitude [$^{\circ}$N]',fontsize=fs)
     ax.set_ylabel(r'Longitude [$^{\circ}$E]',fontsize=fs)
-    ax.set_extent([76,86,25.5,35],crs=ccrs.PlateCarree())
+    #ax.set_extent([76,86,25.5,35],crs=ccrs.PlateCarree())
     #ax.set_extent([80,90,20,30],crs=ccrs.PlateCarree()) # small domain
-    #ax.set_extent([70,100,15,40],crs=ccrs.PlateCarree()) # large domain
+    ax.set_extent([80,115,18,36],crs=ccrs.PlateCarree()) # large domain
     ax.coastlines()
     ax.background_img(name='BM',resolution='high')
     norm = plt.Normalize(5,22)
@@ -106,11 +107,38 @@ if(plotornot):
             lc.set_linewidth(0.5)
             line = ax.add_collection(lc)
 
+    # Read in the flight track from Martina Kraemer's data
+    basedir = '/work/bb1018/b380873/tropic_vis/'
+    scfi = basedir + 'obs/stratoclim2017.geophysika.0808_1.master.ci_eval.nc'
+    sc_data = xr.open_dataset(scfi)
+    lat_sc = sc_data['BEST:LAT'].values
+    lon_sc = sc_data['BEST:LON'].values
+    t_sc = sc_data['time'].values
+    i_sc = np.argwhere((~np.isnan(lat_sc)) & (~np.isnan(lon_sc)) & (lat_sc > 0) & (lon_sc > 0))
+
+    # Pulling from https://matplotlib.org/3.1.1/gallery/lines_bars_and_markers/multicolored_line.html
+    # Create a set of line segments so that we can color them individually
+    #xx,yy = m(lon_sc[i_sc[:,0]],lat_sc[i_sc[:,0]])
+    #points = np.array([xx,yy]).T.reshape(-1,1,2)
+    points = np.array([lon_sc[i_sc[:,0]],lat_sc[i_sc[:,0]]]).T.reshape(-1,1,2)
+    segments = np.concatenate([points[:-1],points[1:]],axis=1)
+
+    # Convert the times from np.datetime64 to float
+    t_sc = t_sc[i_sc[:,0]]
+    t_sc_f = t_sc.astype("float")/1000000000.0
+    t_sc_f = t_sc_f - np.nanmin(t_sc_f)
+    norm = plt.Normalize(t_sc_f.min(),t_sc_f.max())
+    lc = LineCollection(segments,cmap=cm.autumn,norm=norm)
+    lc.set_array(t_sc_f)
+    lc.set_linewidth(2)
+    ax.add_collection(lc)
+
+
 sm = plt.cm.ScalarMappable(cmap='rainbow',norm=norm)
 sm.set_array([])
 c = plt.colorbar(sm)
 c.set_label('Traj. altitude [km]',fontsize=fs)
 c.ax.tick_params(labelsize=fs)
 
-fig.savefig('../output/traj_full60h_fast_vis.png',bbox_inches='tight')
+fig.savefig('../output/traj_full60h_fast_24hvis' + str(p1+1) + '.png',bbox_inches='tight')
 plt.show()
