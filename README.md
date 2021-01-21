@@ -1,7 +1,9 @@
-# ICON_vis
-This repository contains a variety of python scripts to visualize, regrid, and analyze ICON model output from a limited-area domain simulation. Scripts are grouped into those that visualize the domain, dynamical fields, ice / cloud hydrometeor fields, cloud optics values, radiative values, and trajectories. There are also remapping and utility directories.
+# icon_2.3.0_ice-mp_rad_vis
+This repository contains a variety of python scripts to visualize, regrid, and analyze ICON v 2.3.0 model output from a limited-area domain simulation. The project goals center on the interaction of ice microphysics with radiation (ice-mp_rad). Scripts are grouped into those that visualize the domain, dynamical fields, ice / cloud hydrometeor fields, cloud optics values, radiative values, and trajectories. There are also remapping and utility directories.
 
 *fig2_reproduced.py* - reproduce Figure 2 of Lee et al. ACP doi: 10.5194/acp-19-11803-2019, i.e. qv, qi, temperature, potential temperature, and zonal wind profiles from StratoClim Flight 7 versus the model
+
+*Figures_article.ipynb* - A JupyterLab notebook that pulls from the functions below to generate the four figures of a first GRL article.
 
 CloudSat/ - scripts to visualize the 2CICE ice water content (IWC) product, derived from CloudSat overpasses, with the ICON output IWC
 - *2CICE_ZL.py* - generate altitude-lat/lon swathes of 2CICE and ICON IWC 
