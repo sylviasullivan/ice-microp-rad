@@ -5,7 +5,7 @@ import glob, time
 
 # Where are the trajectory files sitting?
 #basedir = '/work/bb1018/b380873/traj_output/test24h/'
-basedir = '/work/bb1018/b380873/traj_output/full60h_fast/'
+basedir = '/work/bb1018/b380873/traj_output/full51h_fast/'
 
 # Timesteps with trajectory output
 dt = ['450'] # ['151','601','751','901']
