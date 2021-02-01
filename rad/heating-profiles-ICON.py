@@ -3,104 +3,55 @@ import xarray as xr
 import matplotlib.pyplot as plt
 import sys
 
-# Which set of pressure levels to look at?
-suffix1 = '_PL2' # '_PL'
-suffix2 = '_PL2'
-# Which simulations to recalculate heating rates for? Order is 1mom, no2mom, novgrid, 2mom
-arr = [False, False, False, False, False]
+infile = 'ICON-NWP_prp_AMIP_free_3d_fluxes_heatingrates_mm.nc'
 # Heat capacity [J kg-1 K-1]
-cp = 1.08*10**(3)
+#cp = 1.08*10**(3)
+# Volumetric heat capacity as ICON evaluates on model levels, not pl
+cv = 0.718*10**3
 # Gravity [m s-2]
 g = 9.8
+# Array of heating rates
+# 60 monthly means, 37 levels, and 2 radiative bands.
+H = np.zeros((60,37,2))
 
-def file_prefix(j):
-    if len(str(j)) == 1:
-       return '000'
-    elif len(str(j)) == 2:
-       return '00'
-    elif len(str(j)) == 3:
-       return '0'
-    else:
-       return 'Inappropriate length of input to file_prefix'
-
-# basedir is the base directory where the nc files are found.
 # tag is how to label the output npy.
-# f is the fraction of high cloud coveraged required.
-# startindx and endinx are the files over which to iterate.
-def meanProfile(basedir, tag, f, startindx, endindx, fileprefix):
-    # How many vertical levels depends on which set we look at
-    if suffix1 == '_PL2':
-       c = 120
-    elif suffix1 == '_PL':
-       c = 18
-    H = np.zeros((24,2,c))
-
-    for i in np.arange(startindx,endindx):
+# latmin - latmax is the latitudinal band to extract.
+def meanProfile(tag, latmin, latmax):
+    flx = xr.open_dataset(infile)
+    lats = flx.lat.values
+    ii = np.argwhere((lats > latmin) & (lats < latmax))[:,0]
+    for i in np.arange(60):
         print(i)
-        prefix = file_prefix(i)
-        flx = xr.open_dataset(basedir + fileprefix + '_icon_tropic_' + prefix + str(i) + suffix1 + '.nc')
-        clch = xr.open_dataset(basedir + 'CLCONV_2D_icon_tropic_' + prefix + str(i) + '.nc').clch.isel(time=0,lev=0)
         # The factor of -1 is because pressure decreases upward
-        temp = -1.*(flx.lwflxall.isel(time=0)-flx.lwflxclr.isel(time=0)).where(clch > f)
-        temp = temp.assign_coords(plev_2=temp.plev_2.values)
-        temp = temp.differentiate('plev_2')
+        temp = -1.*(flx.lwflxall.isel(time=i,lat=slice(ii[0],ii[-1])) -
+                    flx.lwflxclr.isel(time=i,lat=slice(ii[0],ii[-1])))
+        temp = temp.assign_coords(lev=temp.lev.values)
+        temp = temp.differentiate('lev')
         # Factor of 86400 to convert K s-1 to K day-1.
-        H[i-startindx,0] = g/cp*86400*temp.mean(dim={'ncells'})
-        temp = -1.*(flx.swflxall.isel(time=0)-flx.swflxclr.isel(time=0)).where(clch > f)
-        temp = temp.assign_coords(plev_2=temp.plev_2.values)
-        temp = temp.differentiate('plev_2')
-        H[i-startindx,1] = g/cp*86400*temp.mean(dim={'ncells'})
-    print('Saving mean heating rates from ' + basedir + '...')
-    np.save('../output/H_' + tag + suffix2 + '.npy',H)
+        #vals = g/cp*86400*temp.mean(dim={'lat','lon'}).values
+        #print(vals)
+        #time.sleep(5)
+        H[i,:,0] = g/cv*86400*temp.mean(dim={'lat','lon'}).values
+
+        temp = -1.*(flx.swflxall.isel(time=i,lat=slice(ii[0],ii[-1]))-
+                    flx.swflxclr.isel(time=i,lat=slice(ii[0],ii[-1])))
+        #temp = temp.assign_coords(plev=temp.lev.values)
+        temp = temp.differentiate('lev')
+        H[i,:,1] = g/cv*86400*temp.mean(dim={'lat','lon'}).values
+    print('Saving mean heating rates from ' + infile + '...')
+    np.save('H_' + tag + '.npy',H)
     return H
 
-
-if arr[0] == True:
-   H_1mom = meanProfile('/scratch/b/b380873/tropic_run2/','1mom',0,1,25,'RAD_3D')
-else:
-   H_1mom = np.load('../output/H_1mom' + suffix2 + '.npy')
-
-
-if arr[1] == True:
-   H_no2mom = meanProfile('/scratch/b/b380873/tropic_run5_no2mom/','no2mom',0,1,25,'FLX')
-else:
-   H_no2mom = np.load('../output/H_no2mom' + suffix2 + '.npy')
-
-
-if arr[2] == True:
-   H_novgrid = meanProfile('/scratch/b/b380873/tropic_run5_novgrid/','novgrid',0,1,25)
-   H_radnovgrid = meanProfile('/scratch/b/b380873/tropic_run7_radnovgrid/','radnovgrid',0,1,24,'FLX')
-else:
-   H_novgrid = np.load('../output/H_novgrid' + suffix2 + '.npy')
-   H_radnovgrid = np.load('../output/H_radnovgrid' + suffix2 + '.npy')
-
-if arr[3] == True:
-   #H_2mom = meanProfile('/scratch/b/b380873/tropic_run5/','2mom',0,49,73)
-   H_rad2mom = meanProfile('/scratch/b/b380873/tropic_run7_rad2mom/','rad2mom',0,1,24,'FLX')
-else:
-   H_2mom = np.load('../output/H_2mom' + suffix2 + '.npy')
-   H_rad2mom = np.load('../output/H_rad2mom' + suffix2 + '.npy')
-
-
-if arr[4] == True:
-   #H_Atest = meanProfile('/scratch/b/b380873/tropic_run6/','Atest',0,1,24,'FLX')
-   H_PDA = meanProfile('/scratch/b/b380873/tropic_run8_pda/','PDA',0,1,24,'FLX')
-else:
-   H_Atest = np.load('../output/H_Atest' + suffix2 + '.npy')
-   H_PDA = np.load('../output/H_PDA' + suffix2 + '.npy')
-
-# Load the ERA5 heating profiles. Subtract all-sky and clear-sky values.
-# Multiply by 86400 to convert K s-1 to K day-1.
-basedir2 = '/work/bb1018/b380873/tropic_vis/obs/ERA5/'
-vals_ERA5 = xr.open_dataset(basedir2 + 'ERA5_ddtmean_20170807-20170808_55e115e5s40n_PL.nc')
-H_ERA5 = np.zeros((24,2,120))
-vals = vals_ERA5.mttlwr.mean(dim={'lat','lon'}) - vals_ERA5.mttlwrcs.mean(dim={'lat','lon'})
-H_ERA5[:,0] = vals.values[6:30]*86400
-vals = vals_ERA5.mttswr.mean(dim={'lat','lon'}) - vals_ERA5.mttswrcs.mean(dim={'lat','lon'})
-H_ERA5[:,1] = vals.values[6:30]*86400
+#HICON = meanProfile('ICON-AMIP_mm', -90, 90)
+HICON_trop = meanProfile('ICON-AMIP_tropic_mm', -30, 30)
+HICON = meanProfile('ICON-AMIP_mm',-90,90)
+#np.save('lev_ICON-AMIP_mm.npy',xr.open_dataset(infile).lev.values)
+sys.exit()
 
 # Retrieve the pressure levels
-pl = np.loadtxt('../remapping/PMEAN_48-72.txt')
+basedir = '/scratch/b/b380873/tropic_run7_rad2mom/'
+flx = xr.open_dataset(basedir + 'FLX_icon_tropic_0001' + suffix1 + '.nc')
+pl = flx.plev_2
 
 fs = 13
 fig, ax = plt.subplots(nrows=1,ncols=2,figsize=(9,5.5))
@@ -192,7 +143,7 @@ plt.gca().set_yticks([800,500,300,100])
 plt.gca().set_yticklabels(['800','500','300','100'])
 plt.gca().tick_params(labelsize=fs)
 plt.gca().legend(fontsize=fs-1)
-#fig.savefig('../output/heating-profiles_all.pdf')
+fig.savefig('../output/heating-profiles_all.pdf')
 plt.show()
 
 
