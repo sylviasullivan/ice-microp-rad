@@ -25,7 +25,7 @@ def rad2deg(x):
 # Dimensions here are [patches], [timesteps], [trajs]
 fi_list = glob.glob(basedir + 'traj_tst00000' + timestep + '_p*.nc')
 # Tells you how many of the files in the directory to visualize.
-p1 = 6; p2 = 7
+p1 = 7; p2 = 8
 fi_list = fi_list[p1:p2]
 patches = len(fi_list)
 if directory == 'test2h':
@@ -35,7 +35,7 @@ elif directory == 'test24h':
    timesteps = xr.open_dataset(fi_list[0]).dims['time']
    numtraj = xr.open_dataset(fi_list[0]).dims['id']
 else:
-   timesteps = 3306
+   timesteps = 7651
    numtraj = xr.open_dataset(fi_list[0]).dims['id']
 traj_alt = np.zeros((patches,timesteps,numtraj))
 traj_lat = np.zeros((patches,timesteps,numtraj))
@@ -81,7 +81,7 @@ if(plotornot):
     gl.xlabel_style = {'size':fs}
     gl.ylabel_style = {'size':fs}
 
-    ax.set_title('File p00' + str(p1+1) + ' - 24h',y=1.01)  # str(j+1)
+    ax.set_title('File p00' + str(p1+1) + ' - 51h',y=1.01)  # str(j+1)
     ax.set_xlabel(r'Latitude [$^{\circ}$N]',fontsize=fs)
     ax.set_ylabel(r'Longitude [$^{\circ}$E]',fontsize=fs)
     #ax.set_extent([76,86,25.5,35],crs=ccrs.PlateCarree())
@@ -140,5 +140,5 @@ c = plt.colorbar(sm)
 c.set_label('Traj. altitude [km]',fontsize=fs)
 c.ax.tick_params(labelsize=fs)
 
-fig.savefig('../output/traj_full60h_fast_24hvis' + str(p1+1) + '.png',bbox_inches='tight')
+fig.savefig('../output/traj_full51h_fast_vis' + str(p1+1) + '.png',bbox_inches='tight')
 plt.show()

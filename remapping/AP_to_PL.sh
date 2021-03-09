@@ -5,7 +5,7 @@
 # given in PMEAN_*-*.txt
 
 # Directory and inputs to build the file names.
-basedir='/scratch/b/b380873/tropic_run7_rad2mom/'
+basedir='/scratch/b/b380873/0V2M1A1R/'
 #'reff_fix/24h_FALSE/'
 echo 'File prefix, e.g. WINDTH_3D, RAD_3D'
 read fileprefix
@@ -44,7 +44,7 @@ for timestep in $(seq $lowtimestep $hightimestep); do
     # Assemble the filenames and command.
     part1='cdo -b 32 -ap2pl,'
 #    part2='-selvar,w,air_pressure,pres_sfc'
-    inputfile=$basedir$fileprefix'_icon_tropic_'$timestepprefix$timestep'.nc'
+    inputfile=$basedir$fileprefix'_icon_tropic_'$timestepprefix$timestep'_0.025deg.nc'
     outputfile=$basedir$fileprefix'_icon_tropic_'$timestepprefix$timestep'_PL2.nc'
 
     # Rename pres as air_pressure in the $inputfile.

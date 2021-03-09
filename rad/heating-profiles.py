@@ -9,7 +9,8 @@ suffix2 = '_PL2'
 # Which simulations to recalculate heating rates for? Order is 1mom, no2mom, novgrid, 2mom
 arr = [False, False, False, False, False]
 # Heat capacity [J kg-1 K-1]
-cp = 1.08*10**(3)
+cv = 0.718*10**(3)   # constant volume
+cp = 1.08*10**(3)    # constant pressure
 # Gravity [m s-2]
 g = 9.8
 
@@ -144,7 +145,7 @@ ax[1].tick_params(labelsize=fs)
 #fig.suptitle('Daily-median domain-mean heating profiles',fontsize=fs)
 
 #fig.savefig('../output/lw-sw-heating-profiles_1mom+2mom+ERA5.pdf')
-plt.show()
+#plt.show()
 
 
 fig = plt.figure(figsize=(5.5,6.5))
@@ -156,6 +157,8 @@ plt.plot(np.nanmedian(H_novgrid[:,0]+H_novgrid[:,1],axis=0),pl/100,color='gold',
 plt.plot(np.nanmedian(H_rad2mom[:,0]+H_rad2mom[:,1],axis=0),pl/100,color='purple',label='ICON-rad2mom')
 #plt.plot(np.nanmedian(H_radnovgrid[:,0]+H_radnovgrid[:,1],axis=0),pl/100,color='purple',linestyle='--',label='ICON-radnovgrid')
 plt.plot(np.nanmedian(H_PDA[:,0]+H_PDA[:,1],axis=0),pl/100,color='pink',label='ICON-ACI')
+
+print(np.nanmedian(H_PDA[:,0]+H_PDA[:,1],axis=0)/np.nanmedian(H_2mom[:,0]+H_2mom[:,1],axis=0))
 jj = np.argwhere((np.abs(np.nanmedian(H_1mom[:,0]+H_1mom[:,1],axis=0))<0.05))
 kk = np.argwhere((np.abs(np.nanmedian(H_2mom[:,0]+H_2mom[:,1],axis=0))<0.05))
 print('Altitudes of lowest radiative heating (< 0.05 K per day): ')
@@ -163,23 +166,26 @@ print(pl.values[jj[:,0]])
 print(pl.values[kk[:,0]])
 jj = np.argwhere((np.abs(np.nanmedian(H_1mom[:,0]+H_1mom[:,1],axis=0))>0.425))
 kk = np.argwhere((np.abs(np.nanmedian(H_2mom[:,0]+H_2mom[:,1],axis=0))>0.75))
+ll = np.argmax(np.nanmedian(H_rad2mom[:,0]+H_rad2mom[:,1],axis=0))
 print('Altitudes of largest radiative heating (> 0.425 / 0.75 K per day): ')
-print(pl.values[jj[:,0]])
-print(pl.values[kk[:,0]])
+print(pl[jj[:,0]])
+print(pl[kk[:,0]])
+print(pl[ll[:,0]])
 print('Largest radiative heatings at those altitudes: ')
-print(np.nanmedian(H_1mom[:,0]+H_1mom[:,1],axis=0)[jj[:,0]])
-print(np.nanmedian(H_2mom[:,0]+H_2mom[:,1],axis=0)[kk[:,0]])
-print(np.nanmax(np.nanmedian(H_1mom[:,0]+H_1mom[:,1],axis=0)))
-print(np.nanmax(np.nanmedian(H_rad2mom[:,0]+H_rad2mom[:,1],axis=0)))
-print(np.nanmax(np.nanmedian(H_2mom[:,0]+H_2mom[:,1],axis=0)))
+print(cv/cp*np.nanmedian(H_1mom[:,0]+H_1mom[:,1],axis=0)[jj[:,0]])
+print(cv/cp*np.nanmedian(H_2mom[:,0]+H_2mom[:,1],axis=0)[kk[:,0]])
+print(cv/cp*np.nanmax(np.nanmedian(H_1mom[:,0]+H_1mom[:,1],axis=0)))
+print(cv/cp*np.nanmax(np.nanmedian(H_rad2mom[:,0]+H_rad2mom[:,1],axis=0)))
+print(cv/cp*np.nanmax(np.nanmedian(H_2mom[:,0]+H_2mom[:,1],axis=0)))
 jj = np.argwhere((np.nanmedian(H_1mom[:,0]+H_1mom[:,1],axis=0)<-0.065))
 kk = np.argwhere((np.nanmedian(H_2mom[:,0]+H_2mom[:,1],axis=0)<-0.5))
-print('Altitudes of largest radiative cooling (< -0.065 / -0.5 K per day): ')
-print(pl.values[jj[:,0]])
-print(pl.values[kk[:,0]])
+#print('Altitudes of largest radiative cooling (< -0.065 / -0.5 K per day): ')
+#print(pl[jj[:,0]])
+#print(pl[kk[:,0]])
 print('Largest radiative coolings at those altitudes: ')
-print(np.nanmedian(H_1mom[:,0]+H_1mom[:,1],axis=0)[jj[:,0]])
-print(np.nanmedian(H_2mom[:,0]+H_2mom[:,1],axis=0)[kk[:,0]])
+print(cv/cp*np.nanmedian(H_1mom[:,0]+H_1mom[:,1],axis=0)[jj[:,0]])
+print(cv/cp*np.nanmedian(H_2mom[:,0]+H_2mom[:,1],axis=0)[kk[:,0]])
+sys.exit()
 plt.plot([0,0],[50,1000],lw=0.75,linestyle='--',color='k')
 plt.ylabel('Pressure [hPa]',fontsize=fs)
 plt.xlabel(r'Cloud radiative heating [K day$^{-1}$]',fontsize=fs)

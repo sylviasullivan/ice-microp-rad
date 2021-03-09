@@ -8,7 +8,7 @@ suffix1 = '_PL2' # '_PL'
 suffix2 = '_PL2'
 # Which simulations to look at? Order is 1mom, no2mom, novgrid, 2mom
 #arr = [False, False, False, False]
-arr = [False, False, False, True]
+arr = [False, False, False, False]
 
 def file_prefix(j):
     if len(str(j)) == 1:
@@ -71,9 +71,7 @@ else:
 
 
 # Retrieve the pressure levels
-basedir = '/scratch/b/b380873/tropic_run5/'
-flx = xr.open_dataset(basedir + 'FLX_icon_tropic_0049' + suffix1 + '.nc')
-pl = flx.plev_2
+pl = np.loadtxt('../remapping/PMEAN_48-72.txt')
 
 fs = 13
 fig, ax = plt.subplots(nrows=1,ncols=2,figsize=(9,6.5))
@@ -139,5 +137,5 @@ ax[1].set_yticks([800,500,300,100])
 ax[1].set_yticklabels(['800','500','300','100'])
 ax[1].tick_params(labelsize=fs)
 
-fig.savefig('../output/wT-profiles2.pdf')
+#fig.savefig('../output/wT-profiles2.pdf')
 plt.show()

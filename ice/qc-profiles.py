@@ -78,9 +78,7 @@ else:
 
 
 # Retrieve the pressure levels
-basedir = '/scratch/b/b380873/tropic_run5/'
-flx = xr.open_dataset(basedir + 'FLX_icon_tropic_0049' + suffix1 + '.nc')
-pl = flx.plev_2
+pl = np.loadtxt('../remapping/PMEAN_48-72.txt')
 
 fs = 13
 fig = plt.figure()#figsize=(5.5,5.5))

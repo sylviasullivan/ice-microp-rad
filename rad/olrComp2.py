@@ -24,7 +24,7 @@ lons_era5 = olr_data.longitude
 lats_era5 = olr_data.latitude
 
 # Read in the ICON 1-mom simulation.
-basedir = '/work/bb1018/b380873/ICON_output/'
+basedir = '/work/bb1018/b380873/model_output/ICON/'
 olr_data = xr.open_dataset(basedir + 'OLR_24h_tropic_run2_ll.nc')
 olr_icon_1mom = -1.*olr_data.lwflxall.mean(dim={'time'}).sel(height=1)
 lons_icon = olr_data.lon
@@ -112,31 +112,33 @@ fig.canvas.mpl_connect('resize_event', resize_colobar)
 plt.colorbar(im,label=r'W m$^{-2}$',cax=cbar_ax)
 
 resize_colobar(None)
-fig.savefig('../output/olr-comparison_24h.png',bbox_inches='tight')
+#fig.savefig('../output/olr-comparison_24h.png',bbox_inches='tight')
 plt.show()
 
 fig2, ax2 = plt.subplots(nrows=1,ncols=3,figsize=(6.5,6.5))
-fs = 13
-lw = 2
+fs = 16
+lw = 2.5
 ax2[0].plot([1,2],[np.nanmean(olr_ceres),np.nanmean(olr_ceres)],linewidth=lw,color='gray')
 ax2[0].plot([1,2],[np.nanmean(olr_era5),np.nanmean(olr_era5)],linewidth=lw,color='black')
 ax2[0].plot([1,2],[np.nanmean(olr_icon_1mom),np.nanmean(olr_icon_1mom)],linewidth=lw,color='red')
-ax2[0].plot([1,2],[np.nanmean(olr_icon_2mom),np.nanmean(olr_icon_2mom)],linewidth=lw,color='green')
-ax2[0].plot([1,2],[np.nanmean(olr_icon_no2mom),np.nanmean(olr_icon_no2mom)],linewidth=lw,color='blue')
-ax2[0].plot([1,2],[np.nanmean(olr_icon_novgrid),np.nanmean(olr_icon_novgrid)],linewidth=lw,color='gold')
-ax2[0].plot([1,2],[np.nanmean(olr_icon_rad2mom),np.nanmean(olr_icon_rad2mom)],linewidth=lw,color='purple')
-ax2[0].plot([1,2],[np.nanmean(olr_icon_pda),np.nanmean(olr_icon_pda)],linewidth=lw,color='pink')
+ax2[0].plot([1,2],[np.nanmean(olr_icon_no2mom),np.nanmean(olr_icon_no2mom)],linewidth=lw,linestyle='--',color='red')
+ax2[0].plot([1,2],[np.nanmean(olr_icon_2mom),np.nanmean(olr_icon_2mom)],linewidth=lw,color='blue')
+#ax2[0].plot([1,2],[np.nanmean(olr_icon_no2mom),np.nanmean(olr_icon_no2mom)],linewidth=lw,color='blue')
+#ax2[0].plot([1,2],[np.nanmean(olr_icon_novgrid),np.nanmean(olr_icon_novgrid)],linewidth=lw,color='gold')
+ax2[0].plot([1,2],[np.nanmean(olr_icon_rad2mom),np.nanmean(olr_icon_rad2mom)],linewidth=lw,color='goldenrod')
+ax2[0].plot([1,2],[np.nanmean(olr_icon_pda),np.nanmean(olr_icon_pda)],linewidth=lw,color='green')
 ax2[0].set_xlim([0,4])
 ax2[0].set_ylim([200,240])
 ax2[0].tick_params('both',labelsize=fs,rotation=45)
 ax2[0].spines["top"].set_visible(False)
 ax2[0].spines["bottom"].set_visible(False)
 ax2[0].spines["right"].set_visible(False)
-ax2[0].set_ylabel(r'Mean OLR [W m$^{-2}$]',fontsize=fs)
+ax2[0].set_ylabel(r'Mean OLR [W m$^{-2}$]',fontsize=fs) #Spatial mean OIR
 ax2[0].get_xaxis().set_visible(False)
 
 ax2[1].plot([1,2],[np.nanmedian(olr_ceres),np.nanmedian(olr_ceres)],linewidth=lw,color='gray')
 ax2[1].plot([1,2],[np.nanmedian(olr_era5),np.nanmedian(olr_era5)],linewidth=lw,color='black')
+print(np.nanmedian(olr_ceres),np.nanmedian(olr_era5))
 ax2[1].plot([1,2],[np.nanmedian(olr_icon_1mom),np.nanmedian(olr_icon_1mom)],linewidth=lw,color='red')
 ax2[1].plot([1,2],[np.nanmedian(olr_icon_2mom),np.nanmedian(olr_icon_2mom)],linewidth=lw,color='green')
 ax2[1].plot([1,2],[np.nanmedian(olr_icon_no2mom),np.nanmedian(olr_icon_no2mom)],linewidth=lw,color='blue')
@@ -149,7 +151,7 @@ ax2[1].tick_params('both',labelsize=fs,rotation=45)
 ax2[1].spines["top"].set_visible(False)
 ax2[1].spines["bottom"].set_visible(False)
 ax2[1].spines["right"].set_visible(False)
-ax2[1].set_ylabel(r'Median OLR [W m$^{-2}$]',fontsize=fs)
+ax2[1].set_ylabel(r'Median OLR [W m$^{-2}$]',fontsize=fs)  #Median OIR
 ax2[1].get_xaxis().set_visible(False)
 
 ax2[2].plot([1,2],[np.nanstd(olr_ceres),np.nanstd(olr_ceres)],linewidth=lw,color='gray')
@@ -166,8 +168,8 @@ ax2[2].tick_params('both',labelsize=fs,rotation=45)
 ax2[2].spines["top"].set_visible(False)
 ax2[2].spines["bottom"].set_visible(False)
 ax2[2].spines["right"].set_visible(False)
-ax2[2].set_ylabel(r'Stdev OLR [W m$^{-2}$]',fontsize=fs)
+ax2[2].set_ylabel(r'Stdev OLR [W m$^{-2}$]',fontsize=fs)  #Stdev OIR
 ax2[2].get_xaxis().set_visible(False)
 
-#fig2.savefig('../output/OLR_stats_all.pdf',bbox_inches='tight')
+#fig2.savefig('../output/OLR_stats_all2.pdf',bbox_inches='tight')  #OIR
 plt.show()

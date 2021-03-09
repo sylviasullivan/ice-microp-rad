@@ -1,15 +1,15 @@
 #!/bin/ksh
-#SBATCH --account=bb1131
+#SBATCH --account=bb1018
 #SBATCH --job-name=remapdis
 #SBATCH --partition=compute2
 #SBATCH --mem=10gb
 #SBATCH --nodes=1
-#SBATCH --output=/work/bb1131/b380873/tropic_vis/logs/LOG_remapdis.run.%j.o
-#SBATCH --error=/work/bb1131/b380873/tropic_vis/logs/LOG_remapdis.run.%j.o
+#SBATCH --output=/work/bb1018/b380873/tropic_vis/logs/LOG_remapdis.run.%j.o
+#SBATCH --error=/work/bb1018/b380873/tropic_vis/logs/LOG_remapdis.run.%j.o
 #SBATCH --time=00:20:00
 
 # REMAP SIMULATION OUTPUT
-basedir='/scratch/b/b380873/tropic_run2/'
+basedir='/scratch/b/b380873/0V2M1A1R/'
 #basedir='/work/bb1131/b380873/tropic_run2_restart'
 
 #cdo remapdis,targetGrid_global1.nc -setgrid,icon-grid_tropic_55e170e5s40n_R2500m_gridID1.txt $basedir'CLCONV_3D_icon_tropic_0066.nc' $basedir'CLCONV_3D_icon_tropic_0066_remapdis_global1.nc'
@@ -33,10 +33,10 @@ basedir='/scratch/b/b380873/tropic_run2/'
 #name='WINDTH_3D'
 #name='RAD_2D'
 #name='CLCONV_2D'
-name='OMEGA'
+name='CLCONV_3D_F10MIN'
 #name='RAD_3D'
 res=0.025
-for step in 13 14; do
+for step in $(seq 13 18); do
     echo $step
     if [ ${#step} == 1 ]; then
          prefix='000'
