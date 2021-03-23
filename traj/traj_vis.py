@@ -14,6 +14,7 @@ import cartopy.crs as ccrs
 
 timestep = sys.argv[1]
 directory = sys.argv[2]
+num = 6
 basedir = '/work/bb1018/b380873/traj_output/' + directory + '/'
 pi = 3.141592653589793238
 os.environ["CARTOPY_USER_BACKGROUNDS"] = "/pf/b/b380873/conda-envs/ncplot/lib/python3.7/site-packages/cartopy/data/raster/natural_earth"
@@ -25,7 +26,8 @@ def rad2deg(x):
 # Dimensions here are [patches], [timesteps], [trajs]
 fi_list = glob.glob(basedir + 'traj_tst00000' + timestep + '_p*.nc')
 # Tells you how many of the files in the directory to visualize.
-fi_list = fi_list[:1]
+fi_list = fi_list[5:6]
+print(fi_list)
 patches = len(fi_list)
 if directory == 'test2h':
    timesteps = xr.open_dataset(fi_list[0]).dims['time_step']
@@ -34,7 +36,7 @@ elif directory == 'test24h':
    timesteps = xr.open_dataset(fi_list[0]).dims['time']
    numtraj = xr.open_dataset(fi_list[0]).dims['id']
 else:
-   timesteps = 3306
+   timesteps = 7651
    numtraj = xr.open_dataset(fi_list[0]).dims['id']
 traj_alt = np.zeros((patches,timesteps,numtraj))
 traj_lat = np.zeros((patches,timesteps,numtraj))
@@ -69,7 +71,7 @@ for j,f in enumerate(fi_list):
 
 plotornot = True
 if(plotornot):
-    fig, ax = plt.subplots(nrows=1,ncols=1,figsize=(11,11),subplot_kw={'projection':\
+    fig, ax = plt.subplots(nrows=1,ncols=1,figsize=(11,6),subplot_kw={'projection':\
          ccrs.PlateCarree()})
     fs = 15
     gl = ax.gridlines(crs=ccrs.PlateCarree(),draw_labels=True,linewidth=1,color='gray')
@@ -80,12 +82,12 @@ if(plotornot):
     gl.xlabel_style = {'size':fs}
     gl.ylabel_style = {'size':fs}
 
-    ax.set_title('Files p001 - p00' + str(j+1),y=1.01)
+    ax.set_title('Files p00' + str(num),y=1.01)
     ax.set_xlabel(r'Latitude [$^{\circ}$N]',fontsize=fs)
     ax.set_ylabel(r'Longitude [$^{\circ}$E]',fontsize=fs)
-    ax.set_extent([76,86,25.5,35],crs=ccrs.PlateCarree())
+    #ax.set_extent([76,86,25.5,35],crs=ccrs.PlateCarree())
     #ax.set_extent([80,90,20,30],crs=ccrs.PlateCarree()) # small domain
-    #ax.set_extent([70,100,15,40],crs=ccrs.PlateCarree()) # large domain
+    ax.set_extent([70,115,15,40],crs=ccrs.PlateCarree()) # large domain
     ax.coastlines()
     ax.background_img(name='BM',resolution='high')
     norm = plt.Normalize(5,22)
@@ -112,5 +114,5 @@ c = plt.colorbar(sm)
 c.set_label('Traj. altitude [km]',fontsize=fs)
 c.ax.tick_params(labelsize=fs)
 
-fig.savefig('../output/traj_full60h_fast_vis.png',bbox_inches='tight')
+fig.savefig('../output/traj_extract' + str(num) + '.png',bbox_inches='tight')  #traj_full60h_fast_vis.png
 plt.show()

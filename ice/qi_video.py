@@ -9,8 +9,10 @@ from cartopy import config
 from matplotlib import cm
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 
-basedir = '/work/bb1131/b380873/tropic_run2_output/'
-qi_file = basedir + 'qi35_all_try2.nc'
+#basedir = '/work/bb1131/b380873/tropic_run2_output/'
+#qi_file = basedir + 'qi35_all_try2.nc'
+basedir = '/scratch/b/b380873/0V2M1A1R/'
+qi_file = basedir + 'QI_PL41_F10MIN_icon_tropic.nc'
 qi_data = xr.open_dataset(qi_file)
 qi_vals = qi_data.qi.values
 lons = qi_data.lon
@@ -38,7 +40,7 @@ def animate(i):
     ax.clear()
     print(np.nanmin(qi_vals[i,0]*1000),np.nanmean(qi_vals[i,0]*1000),np.nanmax(qi_vals[i,0]*1000))
     im = ax.contourf(lons,lats,qi_vals[i,0]*1000,levels=levs,cmap=cm.viridis,\
-                  transform=ccrs.PlateCarree()) 
+                  transform=ccrs.PlateCarree())
 
     fig.canvas.mpl_connect('resize_event', resize_colobar)
     plt.colorbar(im,label=r'g kg$^{-1}$',cax=cbar_ax)
@@ -51,12 +53,13 @@ def animate(i):
     gl.xformatter = LONGITUDE_FORMATTER
     gl.yformatter = LATITUDE_FORMATTER
 
-    ax.set_extent([55,170,-5,38],crs=ccrs.PlateCarree())
+    #ax.set_extent([55,115,-5,38],crs=ccrs.PlateCarree())
+    ax.set_extent([83,89,18,30],crs=ccrs.PlateCarree())
     im.set_clim([0,0.2])
     ax.coastlines()
     resize_colobar(None)
 
 
-ananas = ani.FuncAnimation(fig,animate,35,interval=700,blit=False)
-#ananas.save('qi_full2.mp4')
+ananas = ani.FuncAnimation(fig,animate,18,interval=700,blit=False)
+ananas.save('../output/QI_PL41_F10MIN_full_0V2M1A1R.mp4')
 plt.show()
