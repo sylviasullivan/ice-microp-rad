@@ -6,11 +6,11 @@
 #SBATCH --nodes=1
 #SBATCH --output=/work/bb1018/b380873/tropic_vis/logs/LOG_remapdis.run.%j.o
 #SBATCH --error=/work/bb1018/b380873/tropic_vis/logs/LOG_remapdis.run.%j.o
-#SBATCH --time=00:35:00
+#SBATCH --time=00:45:00
 
 # REMAP SIMULATION OUTPUT
 #basedir='/scratch/b/b380873/0V2M1A1R/'
-basedir='/scratch/b/b380873/tropic_run5_novgrid/'
+basedir='/scratch/b/b380873/0V2M1A1R/'
 
 #cdo remapdis,targetGrid_global1.nc -setgrid,icon-grid_tropic_55e170e5s40n_R2500m_gridID1.txt $basedir'CLCONV_3D_icon_tropic_0066.nc' $basedir'CLCONV_3D_icon_tropic_0066_remapdis_global1.nc'
 #cdo remapdis,targetGrid_global0.5.nc -setgrid,icon-grid_tropic_55e170e5s40n_R2500m_gridID1.txt $basedir'CLCONV_3D_icon_tropic_0066.nc' $basedir'CLCONV_3D_icon_tropic_0066_remapdis_global0.5.nc'
@@ -33,10 +33,10 @@ basedir='/scratch/b/b380873/tropic_run5_novgrid/'
 #name='WINDTH_3D'
 #name='RAD_2D'
 #name='CLCONV_2D'
-name='CLCONV_3D_F10MIN'
+name='WINDTH_3D_F10MIN'
 #name='RAD_3D'
 res=0.025
-for step in $(seq 13 18); do
+for step in $(seq 1 18); do
     echo $step
     if [ ${#step} == 1 ]; then
          prefix='000'

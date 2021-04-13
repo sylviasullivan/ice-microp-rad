@@ -32,6 +32,7 @@ theta = daten['BEST:THETA'].sel(time=slice(datetime(2017,8,8,6,20),datetime(2017
 rhice_flash = daten['BEST:RH_ice_gas'].sel(time=slice(datetime(2017,8,8,6,20),datetime(2017,8,8,6,48)))
 rhice_fish = daten['BEST:RH_ice_enh'].sel(time=slice(datetime(2017,8,8,6,20),datetime(2017,8,8,6,48)))
 
+sys.exit()
 # Different altitude variables extracted with different filters.
 alt1 = alt.where((alt > 0) & (h2o_flash > 0) & (h2o_fish > 0))
 h2o_flash = h2o_flash.where((alt > 0) & (h2o_flash > 0) & (h2o_fish > 0))

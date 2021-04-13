@@ -5,7 +5,7 @@
 # given in HEIGHTS_*.txt
 
 # Directory and inputs to build the file names.
-basedir='/scratch/b/b380873/tropic_run5/'
+basedir='/scratch/b/b380873/0V2M1A1R/'
 echo 'File prefix, e.g. WINDTH_3D, RAD_3D'
 read fileprefix
 echo 'First timestep, e.g. 1, 25, 52'
@@ -45,8 +45,8 @@ for timestep in $(seq $lowtimestep $hightimestep); do
     # Assemble the filenames and command.
     part1='cdo -ap2hl,'
 #    part2='-selvar,w,air_pressure,pres_sfc'
-    inputfile=$basedir$fileprefix'_icon_tropic_'$timestepprefix$timestep'_remapdis_0.025.nc'
-    outputfile=$basedir$fileprefix'_icon_tropic_'$timestepprefix$timestep'_remapdis_0.025_HL.nc'
+    inputfile=$basedir$fileprefix'_icon_tropic_'$timestepprefix$timestep'.nc'
+    outputfile=$basedir$fileprefix'_icon_tropic_'$timestepprefix$timestep'_HL.nc'
 
     # Rename pres as air_pressure in the $inputfile.
     echo 'Change pres to air_pressure'
