@@ -29,20 +29,25 @@ basedir = '/scratch/b/b380873/traj_full51h_fast/'
 # Lists to which we append the power spectral density and frequency values.
 # If this boolean is True, then the power spectra for all trajectory files is recalculated
 PSDcalc = True
-# We have 30 files and 3826 frequencies. I don't know where the latter number comes from.
-PSD_ff_mean = np.zeros((30,3826))
-PSD_Pxx_mean = np.zeros((30,3826))
+file_num = 25
+# We have <file_num> files and 3826 frequencies. I don't know where the latter number comes from.
+PSD_ff_mean = np.zeros((file_num, 3826))
+PSD_Pxx_mean = np.zeros((file_num, 3826))
 if PSDcalc == True:
-    PSD_ff = [[] for i in np.arange(30)]
-    PSD_Pxx = [[] for i in np.arange(30)]
-    for j in np.arange(1,31):
+    PSD_ff = [[] for i in np.arange(file_num)]
+    PSD_Pxx = [[] for i in np.arange(file_num)]
+    for j in np.arange(1, file_num+1):
         print(j)
         # Read in the temperature from the trajectory file above.
         # Its dimension will be [time steps, trajectory id].
-        traj_file = basedir + 'traj_tst00000450_p' + file_prefix(j) + str(j) + '_trim.nc'
-        traj_T_series = xr.open_dataset(traj_file).t.values
-        traj_Tfluc_series = traj_T_series.T - np.nanmean(traj_T_series,axis=1)
-        traj_w_series = xr.open_dataset(traj_file).w_v.values
+        #traj_file = basedir + 'traj_tst00000450_p' + file_prefix(j) + str(j) + '_trim.nc'
+        #traj_T_series = xr.open_dataset(traj_file).t.values
+        #traj_Tfluc_series = traj_T_series.T - np.nanmean(traj_T_series,axis=1)
+        #traj_w_series = xr.open_dataset(traj_file).w_v.values
+
+        traj_file = basedir + 'cirrus_tst00000450_p' + file_prefix(j) + str(j) + '_trim_clams.nc'
+        traj_T_series = xr.open_dataset(traj_file)['T'].values
+        #traj_w_series = xr.open_dataset(traj_file).w_v.values
 
         # Store the PSDs for multiple temperature time series.
         freqs = int(traj_T_series.shape[0]/2 + 1)
@@ -52,7 +57,7 @@ if PSDcalc == True:
         # Iterate over the trajectories and save their PSDs.
         for i in np.arange(traj_id):
             # Generate an instance of Class traj_psd with temp = input temperature time series.
-            traj_obj = traj_psd(temp=traj_w_series[:7651,i])
+            traj_obj = traj_psd(temp=traj_T_series[:7651,i])
 
             # Generate an instance of Class_traj_psd with temp = input vertical velocity series.
             #traj_obj = traj_psd(temp=traj_w_series[:,i])
@@ -68,8 +73,8 @@ if PSDcalc == True:
 
         PSD_ff_mean[j-1] = np.nanmean(PSD_ff[j-1],axis=0)
         PSD_Pxx_mean[j-1] = np.nanmean(PSD_Pxx[j-1],axis=0)
-    np.save('../output/w_PSD_ff_sim_traj.npy', PSD_ff_mean)
-    np.save('../output/w_PSD_Pxx_sim_traj.npy', PSD_Pxx_mean)
+    np.save('../output/T_PSD_ff_sim_traj_Tfluc2.npy', PSD_ff_mean)
+    np.save('../output/T_PSD_Pxx_sim_traj_Tfluc2.npy', PSD_Pxx_mean)
 
 
 #else:
@@ -124,7 +129,7 @@ plt.gca().tick_params('both',labelsize=fs)
 plt.gca().spines['top'].set_color('none')
 plt.gca().spines['right'].set_color('none')
 
-fig.savefig('../output/traj51h_T_PSD_7651.pdf',bbox_inches='tight')
+#fig.savefig('../output/traj51h_T_PSD_7651.pdf',bbox_inches='tight')
 plt.show()
 sys.exit()
 
