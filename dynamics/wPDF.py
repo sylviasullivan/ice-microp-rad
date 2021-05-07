@@ -36,27 +36,26 @@ h_obs2, bin_edges = np.histogram(w_obs, bins=np.linspace(-3,3,100), weights=wgts
 # Read in the vertical velocities from all 30 trajectories
 #basedir = '/work/bb1018/b380873/traj_output/full51h_fast/51h_trim/'
 #fi = basedir + 'traj_tst00000450_p001_trim.nc'
-make_h_sim = True
+make_h_sim = False
 if make_h_sim == True:
    h_sim = np.zeros((30,99))
    for i in np.arange(1,31):
        print(i)
        basedir = '/scratch/b/b380873/traj_full51h_fast/'
-       fi = basedir + 'traj_tst00000450_p' + prefix(i) + str(i) + '.nc'
+       fi = basedir + 'traj_tst00000450_p' + prefix(i) + str(i) + '_trim.nc'
        z = xr.open_dataset(fi)['alt']
-       w_sim = xr.open_dataset(fi)['w_v'].where((z > 10000) & (z <= 15000)).values
-       #w_sim = xr.open_dataset(fi)['w_v'].where((z > 15000)).values
+       #w_sim = xr.open_dataset(fi)['w_v'].where((z > 10000) & (z <= 15000)).values
+       w_sim = xr.open_dataset(fi)['w_v'].where((z > 15000)).values
        w_sim = w_sim[~np.isnan(w_sim)]
        print(np.nanmean(w_sim),np.nanstd(w_sim))
 
        # Calculate the normalized / relative frequency of these w values
        wgts = np.ones_like(w_sim)/len(w_sim)
        h_sim[i-1], _ = np.histogram(w_sim, bins=np.linspace(-3,3,100), weights=wgts)
-#   np.save('../output/traj_w_histogram_sim.npy',h_sim)
+   np.save('../output/traj_w_histogram_sim_extract.npy',h_sim)
 else:
-   h_sim = np.load('../output/traj_w_histogram_sim.npy')
+   h_sim = np.load('../output/traj_w_histogram_sim.npy')  #'traj_w_histogram_sim_extract.npy'
    h_sim2 = np.load('../output/traj_w_histogram_sim-10-15.npy')
-sys.exit()
 
 fs = 16
 fig = plt.figure(figsize=(7,6))
