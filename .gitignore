@@ -10,6 +10,7 @@ other/
 remapping/170e_grid/
 obs/
 logs/
+traj/syntraj/LOG_*
 *.pyc
 output/
 rad/amip_cloud_radheating_comparison_mpi_lmd_icon.ipynb
