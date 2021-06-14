@@ -11,7 +11,7 @@ from plotting_utilities import sim_colors, sim_ls, file_prefix, sexy_axes2
 suffix = '_PL2' # '_PL'
 
 # Which simulation acronyms to calculate heating rates for?
-acronym = []
+acronym = ['0V2M1A1R']
 others = ['0V1M0A0R', '1V1M0A0R', '0V2M0A0R', '1V2M0A0R', '0V2M0A1R', '1V2M0A1R',
           '0V2M1A0R', '1V2M1A0R', '1V2M1A1R'] # '0V2M1A1R',
 
@@ -82,7 +82,7 @@ fig, ax = plt.subplots( nrows=1, ncols=2, figsize=(9,5.5) )
 ax[0].plot( np.nanmean(H_ERA5[:,0],axis=0), pl/100, color='black', ls='-', label='ERA5' )
 ax[0].plot([0,0], [50,800], lw=0.75, linestyle='--', color='k')
 for h, o in zip(H_all, others + acronym):
-    ax[0].plot( np.nanmedian(h[:,0],axis=0), pl/100, color=farbe[o[1:]], ls=stil[o[:2]], label=o )
+    ax[0].plot( np.nanmedian(h[:,0],axis=0), pl/100, color=farbe[o], ls=stil[o[:2]], label=o )
 ax[0].set_ylabel('Pressure [hPa]', fontsize=fs)
 ax[0].set_xlabel(r'LW cloud radiative heating [K day$^{-1}$]', fontsize=fs)
 ax[0].text(0.05, 0.92, '(a)', weight='bold', fontsize=fs+4, transform=ax[0].transAxes)
@@ -92,7 +92,7 @@ sexy_axes2(ax[0], fs, True)
 
 ax[1].plot(np.nanmean(H_ERA5[:,1],axis=0),pl/100,color='black',linestyle='-',label='ERA5')
 for h, o in zip(H_all, others + acronym):
-    ax[1].plot(np.nanmedian(h[:,1],axis=0), pl/100, color=farbe[o[1:]], ls=stil[o[:2]], label=o)
+    ax[1].plot(np.nanmedian(h[:,1],axis=0), pl/100, color=farbe[o], ls=stil[o[:2]], label=o)
 ax[1].plot([0,0], [50,800], lw=0.75, linestyle='--', color='k')
 ax[1].set_xlabel(r'SW cloud radiative heating [K day$^{-1}$]',fontsize=fs)
 ax[1].text(0.05, 0.92, '(b)', weight='bold', fontsize=fs+4, transform=ax[1].transAxes)
@@ -106,7 +106,7 @@ plt.show()
 fig = plt.figure(figsize=(5.5,6.5))
 plt.plot(np.nanmedian(H_ERA5[:,0]+H_ERA5[:,1],axis=0), pl/100, color='black', ls='-', label='ERA5')
 for h, o in zip(H_all, others + acronym):
-    plt.plot(np.nanmedian(h[:,0]+h[:,1],axis=0), pl/100, color=farbe[o[1:]], ls=stil[o[:2]], label=o)
+    plt.plot(np.nanmedian(h[:,0]+h[:,1],axis=0), pl/100, color=farbe[o], ls=stil[o[:2]], label=o)
 plt.plot([0,0],[50,1000],lw=0.75,linestyle='--',color='k')
 plt.ylabel('Pressure [hPa]',fontsize=fs)
 plt.xlabel(r'Cloud radiative heating [K day$^{-1}$]',fontsize=fs)
@@ -114,7 +114,7 @@ plt.xlabel(r'Cloud radiative heating [K day$^{-1}$]',fontsize=fs)
 plt.xlim([-0.75,1.25])
 sexy_axes2(plt.gca(), fs, True)
 plt.gca().legend(fontsize=fs-1)
-#fig.savefig('../output/heating-profiles_all.pdf')
+fig.savefig('../output/heating-profiles_all.pdf')
 
 # Heating difference between 0V2M1A0R and 1V2M1A0R simulations
 print(np.nanmedian(H_all[6,:,0]+H_all[6,:,1],axis=0) - np.nanmedian(H_all[7,:,0]+H_all[7,:,1],axis=0))

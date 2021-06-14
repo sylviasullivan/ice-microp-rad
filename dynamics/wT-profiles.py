@@ -1,77 +1,60 @@
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
+
 import sys
+sys.path.append('/work/bb1018/b380873/tropic_vis/')
+from plotting_utilities import sim_colors, sim_ls, file_prefix, sexy_axes2
 
 # Which set of pressure levels to look at?
-suffix1 = '_PL2' # '_PL'
-suffix2 = '_PL2'
-# Which simulations to look at? Order is 1mom, no2mom, novgrid, 2mom
-#arr = [False, False, False, False]
-arr = [False, False, False, False]
+suffix = '_PL2' # '_PL'
 
-def file_prefix(j):
-    if len(str(j)) == 1:
-       return '000'
-    elif len(str(j)) == 2:
-       return '00'
-    elif len(str(j)) == 3:
-       return '0'
-    else:
-       return 'Inappropriate length of input to file_prefix'
+
+# Which simulation acronyms to calculate for?
+acronym = ['1V2M1A0R', '0V2M1A1R', '1V2M1A1R']
+others = ['0V1M0A0R', '1V1M0A0R', '0V2M0A0R', '1V2M0A0R', '0V2M0A1R', '1V2M0A1R',
+          '0V2M1A0R']#, '1V2M1A0R', '0V2M1A1R', '1V2M1A1R']
 
 # basedir is the base directory where the nc files are found.
-# tag is how to label the output npy.
+# acronym is how to label the output npy.
 # f is the fraction of high cloud coveraged required.
 # startindx and endinx are the files over which to iterate.
-def meanProfile(basedir, tag, f, startindx, endindx, fileprefix):
+def meanProfile(basedir, acronym, f, startindx, endindx, fileprefix):
     # How many vertical levels depends on which set we look at
-    if suffix1 == '_PL2':
+    if suffix == '_PL2':
        c = 120
-    elif suffix1 == '_PL':
+    elif suffix == '_PL':
        c = 18
     WT = np.zeros((2,24,c))
 
     for i in np.arange(startindx,endindx):
         print(i)
         prefix = file_prefix(i)
-        w = xr.open_dataset(basedir + fileprefix + '_icon_tropic_' + prefix + str(i) + suffix1 + '.nc')
+        w = xr.open_dataset(basedir + fileprefix + '_icon_tropic_' + prefix + str(i) + suffix + '.nc')
         clch = xr.open_dataset(basedir + 'CLCONV_2D_icon_tropic_' + prefix + str(i) + '.nc').clch.isel(time=0,lev=0)
         WT[0,i-startindx] = w.omega.isel(time=0).where(clch > f). mean(dim={'ncells'})
         WT[1,i-startindx] = w.temp.isel(time=0).where(clch > f). mean(dim={'ncells'})
 
     print('Saving mean pressure velocity and temperature from ' + basedir + '...')
-    np.save('../output/WT_' + tag + '_' + suffix2 + '.npy',WT)
+    np.save('../output/WT_' + acronym + suffix + '.npy',WT)
     return WT
 
-if arr[0] == True:
-   WT_1mom = meanProfile('/scratch/b/b380873/tropic_run2/','1mom',0,1,24,'WT')
-else:
-   WT_1mom = np.load('../output/WT_1mom' + suffix2 + '.npy')
 
+for a in acronym:
+   W = meanProfile('/scratch/b/b380873/' + a + '/', a, 0, 1, 25, 'WT')
 
-if arr[1] == True:
-   WT_no2mom = meanProfile('/scratch/b/b380873/tropic_run5_no2mom/','no2mom',0,1,24,'WT')
-else:
-   WT_no2mom = np.load('../output/WT_no2mom' + suffix2 + '.npy')
+ll = len(others + acronym)
+WT_all = np.zeros((ll, 24, 2, 120))
+for indx, o in enumerate(others + acronym):
+    print(o)
+    WT_all[indx] = np.load('../output/WT_' + o + suffix + '.npy')
 
-
-if arr[2] == True:
-   #WT_novgrid = meanProfile('/scratch/b/b380873/tropic_run5_novgrid/','novgrid',0,1,24,'WT')
-   WT_radnovgrid = meanProfile('/scratch/b/b380873/tropic_run7_radnovgrid/','radnovgrid',0,1,24,'WT')
-else:
-   WT_novgrid = np.load('../output/WT_novgrid' + suffix2 + '.npy')
-
-
-if arr[3] == True:
-   #WT_2mom = meanProfile('/scratch/b/b380873/tropic_run5/','2mom',0,48,72,'WT')
-   WT_rad2mom = meanProfile('/scratch/b/b380873/tropic_run7_rad2mom/','rad2mom',0,1,24,'WT')
-else:
-   WT_2mom = np.load('../output/WT_2mom' + suffix2 + '.npy')
-
+sys.exit()
 
 # Retrieve the pressure levels
 pl = np.loadtxt('../remapping/PMEAN_48-72.txt')
+farbe = sim_colors()
+stil = sim_ls()
 
 fs = 13
 fig, ax = plt.subplots(nrows=1,ncols=2,figsize=(9,6.5))

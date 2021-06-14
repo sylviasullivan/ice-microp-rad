@@ -10,9 +10,9 @@ from plotting_utilities import sim_colors, sim_ls, file_prefix, sexy_axes2
 suffix = '_PL2' # '_PL'
 
 # Which simulation acronyms to calculate for?
-acronym = []
+acronym = ['0V2M1A1R']
 others = ['0V1M0A0R', '1V1M0A0R', '0V2M0A0R', '1V2M0A0R', '0V2M0A1R', '1V2M0A1R',
-          '0V2M1A0R', '1V2M1A0R', '1V2M1A1R'] # '0V2M1A1R',
+          '0V2M1A0R', '1V2M1A0R', '1V2M1A1R']
 
 # basedir is the base directory where the nc files are found.
 # acronym is how to label the output npy.
@@ -53,16 +53,16 @@ stil = sim_ls()
 fs = 13
 fig = plt.figure()#figsize=(5.5,5.5))
 for q, o in zip(QI_all, others + acronym):
-    plt.plot(np.nanmean(q,axis=0)*1000, pl/100, color=farbe[o[1:]], ls=stil[o[:2]], label=o)
+    plt.plot(np.nanmean(q,axis=0)*1000, pl/100, color=farbe[o], ls=stil[o[:2]], label=o)
     print(np.nanmean(q*1000,axis=0).max())
     m = np.nanmean(q,axis=0).max()
     i = np.argmax(np.nanmean(q,axis=0))
-    plt.plot([0,m*1000],[pl[i]/100,pl[i]/100], lw=0.5, ls='--', color=farbe[o[1:]])
+    plt.plot([0,m*1000],[pl[i]/100,pl[i]/100], lw=0.5, ls='--', color=farbe[o])
 plt.plot([0,0], [50,800], lw=0.75, linestyle='--', color='k')
 plt.ylabel('Pressure [hPa]', fontsize=fs)
 plt.xlabel(r'Domain-mean daily-mean $q_i$ [g kg$^{-1}$]', fontsize=fs)
 plt.legend()
 sexy_axes2(plt.gca(), fs, True)
 
-#fig.savefig('../output/qi-profiles_all.pdf')
+fig.savefig('../output/qi-profiles_all.pdf')
 plt.show()
