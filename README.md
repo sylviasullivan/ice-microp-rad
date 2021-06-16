@@ -3,7 +3,9 @@ This repository contains a variety of python scripts to visualize, regrid, and a
 
 *fig2_reproduced.py* - reproduce Figure 2 of Lee et al. ACP doi: 10.5194/acp-19-11803-2019, i.e. qv, qi, temperature, potential temperature, and zonal wind profiles from StratoClim Flight 7 versus the model
 
-*Figures_article.ipynb* - A JupyterLab notebook that pulls from the functions below to generate the four figures of a first GRL article.
+*Figures_article1.ipynb*, *SI_article1.ipynb* - iPython notebooks that pull from the functions below to generate the 4 main and 5 supplemental figures of the Communications Earth & Environment publication
+
+*Figures_article2.ipynb* - An iPython notebook that pulls from the functions below to generate figures for a publication on the trajectories in ICON and CLaMS
 
 CloudSat/ - scripts to visualize the 2CICE ice water content (IWC) product, derived from CloudSat overpasses, with the ICON output IWC
 - *2CICE_ZL.py* - generate altitude-lat/lon swathes of 2CICE and ICON IWC 
@@ -72,7 +74,17 @@ traj/ - scripts to visualize the trajectory outputs
 - *traj_vis.py* - visualize the trajectories colored by altitude over a land type-colored map
 - *psd_driver.py* - visualize the temperature and vertical velocity power spectral densities from trajectory output
 
+traj/syntraj/ - scripts to work with synthetic trajectories from ICON high-time-resolution output
+- *collocateme.py* - driver for collocateSim to produce the trajectory with minimized Euclidean distance
+- *collocateSim.py* - find the ICON values with minimized Euclidean distance from the in-situ measurement
+- *extractme.py* - driver for extractSim to produce a series of synthetic trajectories in a spatiotemporal "bubble" around the in-situ measurement
+- *extractSim.py* - find a random subset of ICON values within a spatiotemporal "bubble" around the in-situ measurement to constitute synthetic trajectories
+- *statme_\*.py* - driver for the corresponding *syn_traj_stats_\*.npy* to calculate statistics in altitude bins along synthetic trajectories
+- *syn_traj_stats_\*.py* - calculate statistics in altitude bins along the synthetic trajectories (*thermo* - for qv, T, and P; *fixed* with the same element number per bin as the measurements)
+
 utilities 
 - *convertTXTNC.py* - generate nc files from the grid description txt file
 - *KL_div.py* - calculate the Kullback-Leibler divergence between two distributions
+- *plotting_utilities.py* - series of functions to make nice axes, generate a color dictionary, open certain files, etc.
+- *thermodynamic_functions.py* - calculate saturation vapor pressure, potential temperature, RH, etc.
 - *z_from_ml.py* - calculate the approximate altitude for a given model level at lat/lon using the external parameter topography
