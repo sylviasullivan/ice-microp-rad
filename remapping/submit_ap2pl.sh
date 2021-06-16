@@ -2,15 +2,16 @@
 #SBATCH --account=bb1018
 #SBATCH --job-name=ap2pl
 #SBATCH --partition=compute2
+#SBATCH --mem=80gb
 #SBATCH --nodes=8
 #SBATCH --output=/work/bb1018/b380873/tropic_vis/logs/LOG_ap2pl.run.%j.o
 #SBATCH --error=/work/bb1018/b380873/tropic_vis/logs/LOG_ap2pl.run.%j.o
-#SBATCH --time=02:00:00
+#SBATCH --time=04:00:00
 
 # Directory and inputs to build the file names.
-basedir='/scratch/b/b380873/tropic_run8_pda/'
+basedir='/scratch/b/b380873/0V2M1A1R/'
 fileprefix1='WINDTH_3D'
-fileprefix2='OMEGA'
+fileprefix2='WT'
 lowtimestep=1
 hightimestep=24
 
@@ -48,8 +49,8 @@ for timestep in $(seq $lowtimestep $hightimestep); do
     outputfile=$basedir$fileprefix2'_icon_tropic_'$timestepprefix$timestep'_PL2.nc'
 
     # Rename pres as air_pressure in the $inputfile.
-    cdo chname,pres,air_pressure $inputfile $basedir'temp.nc'
-    cmd=$part1$pressures' '$part2' '$basedir'temp.nc '$outputfile
+    cdo chname,pres,air_pressure $inputfile $basedir'temp3.nc'
+    cmd=$part1$pressures' '$part2' '$basedir'temp3.nc '$outputfile
 
     # Evaluate the command as you would from the command line.
     eval $cmd

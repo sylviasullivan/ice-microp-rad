@@ -15,8 +15,8 @@ import cartopy.crs as ccrs
 
 timestep = sys.argv[1]
 directory = sys.argv[2]
-#basedir = '/work/bb1018/b380873/traj_output/' + directory + '/'
-basedir = '/scratch/b/b380873/traj_full51h_fast/' + directory + '/'
+basedir = '/work/bb1018/b380873/traj_output/' + directory + '/'
+#basedir = '/scratch/b/b380873/traj_full51h_fast/' + directory + '/'
 
 pi = 3.141592653589793238
 os.environ["CARTOPY_USER_BACKGROUNDS"] = "/pf/b/b380873/conda-envs/ncplot/lib/python3.7/site-packages/cartopy/data/raster/natural_earth"
@@ -36,7 +36,7 @@ def rad2deg(x):
     return x*180/pi
 
 # Dimensions here are [patches], [timesteps], [trajs]
-fi_list = glob.glob(basedir + 'traj_tst00000' + timestep + '_p*.nc')
+fi_list = glob.glob(basedir + 'traj_tst0000' + timestep + '_p*_trim_extract.nc')
 # Tells you how many of the files in the directory to visualize.
 p1 = 10; p2 = 11
 fi_list = fi_list[p1:p2]
@@ -103,7 +103,7 @@ if(plotornot):
     #ax.set_extent([80,90,20,30],crs=ccrs.PlateCarree()) # small domain
     ax.set_extent([60,118,10,38],crs=ccrs.PlateCarree()) # large domain
     ax.coastlines()
-    ax.background_img(name='BM',resolution='high')
+    #ax.background_img(name='BM',resolution='high')
     norm = plt.Normalize(5,22)
     for j in np.arange(patches):
         # How many trajectories to plot?
@@ -160,5 +160,5 @@ c.set_label('Traj. altitude [km]',fontsize=fs)
 c.ax.tick_params(labelsize=fs)
 resize_colorbar(None)
 
-fig.savefig('../output/traj_full51h_fast_vis' + str(p1+1) + '.png',bbox_inches='tight')
+fig.savefig('../output/traj_ICON_0V1M0A0R_vis' + str(p1+1) + '.png',bbox_inches='tight')
 plt.show()

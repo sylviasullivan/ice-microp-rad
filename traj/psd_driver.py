@@ -2,29 +2,21 @@ from traj_psd import traj_psd
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
-import time, random, sys
+import time, random, sys, os
 import pickle
+sys.path.append(os.path.abspath("/work/bb1018/b380873/tropic_vis/"))
+from plotting_utilities import traj_prefix
 
 # The directory and trajectory output file from which to take the time series.
 #basedir = '/work/bb1018/b380873/traj_output/test2h/'
 #traj_file = basedir + 'traj_tst00000751_p001_trim.nc'
 
-def file_prefix(j):
-    if len(str(j)) == 1:
-       return '00'
-    elif len(str(j)) == 2:
-       return '0'
-    elif len(str(j)) == 3:
-       return ''
-    else:
-       return 'Inappropriate length of input to file_prefix'
-
-
 # The directory where the power spectral density figure should be saved.
 basedir2 = '/work/bb1018/b380873/tropic_vis/output/'
 
 # The directory where the trajectory output lives.
-basedir = '/scratch/b/b380873/traj_full51h_fast/'
+#basedir = '/scratch/b/b380873/traj_full51h_fast/'
+basedir = '/work/bb1018/b380873/traj_output/traj_CLAMS-Tf_0V2M0A0R/'
 
 # Lists to which we append the power spectral density and frequency values.
 # If this boolean is True, then the power spectra for all trajectory files is recalculated
@@ -45,9 +37,9 @@ if PSDcalc == True:
         #traj_Tfluc_series = traj_T_series.T - np.nanmean(traj_T_series,axis=1)
         #traj_w_series = xr.open_dataset(traj_file).w_v.values
 
-        traj_file = basedir + 'cirrus_tst00000450_p' + file_prefix(j) + str(j) + '_trim_clams.nc'
-        traj_T_series = xr.open_dataset(traj_file)['T'].values
-        #traj_w_series = xr.open_dataset(traj_file).w_v.values
+        traj_file = basedir + 'cirrus_tst00000450_p' + traj_prefix(j) + str(j) + '_trim_clams.nc'
+        #traj_T_series = xr.open_dataset(traj_file)['T'].values
+        traj_w_series = xr.open_dataset(traj_file)['w_v'].values
 
         # Store the PSDs for multiple temperature time series.
         freqs = int(traj_T_series.shape[0]/2 + 1)
@@ -57,10 +49,10 @@ if PSDcalc == True:
         # Iterate over the trajectories and save their PSDs.
         for i in np.arange(traj_id):
             # Generate an instance of Class traj_psd with temp = input temperature time series.
-            traj_obj = traj_psd(temp=traj_T_series[:7651,i])
+            #traj_obj = traj_psd(temp=traj_T_series[:7651,i])
 
             # Generate an instance of Class_traj_psd with temp = input vertical velocity series.
-            #traj_obj = traj_psd(temp=traj_w_series[:,i])
+            traj_obj = traj_psd(temp=traj_w_series[:7651,i])
 
             # Calculate the power spectral density
             ff, Pxx, Nyq = traj_obj.calc_psd()
@@ -73,12 +65,12 @@ if PSDcalc == True:
 
         PSD_ff_mean[j-1] = np.nanmean(PSD_ff[j-1],axis=0)
         PSD_Pxx_mean[j-1] = np.nanmean(PSD_Pxx[j-1],axis=0)
-    np.save('../output/T_PSD_ff_sim_traj_Tfluc2.npy', PSD_ff_mean)
-    np.save('../output/T_PSD_Pxx_sim_traj_Tfluc2.npy', PSD_Pxx_mean)
 
+    np.save('../output/w_PSD_ff_0V2M0A0R_traj_Tf.npy', PSD_ff_mean)
+    np.save('../output/w_PSD_Pxx_0V2M0A0R_traj_Tf.npy', PSD_Pxx_mean)
 
 #else:
-#   PSD_ff = 
+#   PSD_ff =
 
 # Copying the plt_psd method from traj_psd.py
 fs = 14
