@@ -1,7 +1,6 @@
 # Input the existing syn_traj Dataset along with time, pressure, lat, and lon from the flight track
 #@profile
-def collocateSim(syn_traj, var_ICON, flight_time, flight_pressure, flight_lat,
-                  flight_lon, flight_alt, sim_acronym):
+def collocateSim(syn_traj, var_ICON, flight_time, flight_pressure, flight_lat, flight_lon, flight_alt):
     import datetime, sys, time
     import numpy as np
     import xarray as xr
@@ -30,11 +29,15 @@ def collocateSim(syn_traj, var_ICON, flight_time, flight_pressure, flight_lat,
     var_ICON = var_ICON.sel( time=flight_time_approx )
 
     # Move the lat, lon, and plev values from coordinates / dimensions to variables
-    var_ICON = var_ICON.reset_coords(names=['lat', 'lon', 'plev'], drop=False)
+    var_ICON = var_ICON.reset_coords( names=['lat', 'lon', 'plev'], drop=False )
 
-    # Create a new 'time' dimension that only contains the single flight time.
-    var_ICON = var_ICON.expand_dims("time").assign_coords(time=("time", [flight_time_approx]))
-    syn_traj = xr.concat([syn_traj, var_ICON], dim='time')
+    # Create new 'time' and 'ntraj' dimensions that contain the single flight time and value of 1.
+    var_ICON = var_ICON.expand_dims( "ntraj" ).assign_coords( ntraj=("ntraj", [1]) )
+    var_ICON = var_ICON.expand_dims( "time" ).assign_coords( time=("time", [flight_time_approx]) )
+    
+    # Save the in-situ altitude and a trajectory id of 1
+    var_ICON['alt'] = (["time", "ntraj"], flight_alt*np.ones((1,1)))
+    syn_traj = xr.concat( [syn_traj, var_ICON], dim='time' )
     return syn_traj
 
 #profilewrapper()

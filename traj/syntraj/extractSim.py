@@ -8,7 +8,6 @@ def extractSim(syn_traj, var_ICON, flight_time, flight_pressure, flight_lat, fli
     ri = np.random.randint
 
     # Global variables in the script form
-    sim_acronym = '0V1M0A0R'
     n = 5
     ll_interval = 0.75
     alt_interval = 1

@@ -4,9 +4,9 @@
 #SBATCH --partition=compute2
 #SBATCH --mem=20gb
 #SBATCH --nodes=1
-#SBATCH --output=/work/bb1018/b380873/tropic_vis/traj/syntraj-profile/LOG_syntraj.%j.o
-#SBATCH --error=/work/bb1018/b380873/tropic_vis/traj/syntraj-profile/LOG_syntraj.%j.o
+#SBATCH --output=/work/bb1018/b380873/tropic_vis/traj/syntraj/LOG_syntraj.%j.o
+#SBATCH --error=/work/bb1018/b380873/tropic_vis/traj/syntraj/LOG_syntraj.%j.o
 #SBATCH --time=02:30:00
 
 #source activate ncplot
-python profileme.py
+python pinpointme.py

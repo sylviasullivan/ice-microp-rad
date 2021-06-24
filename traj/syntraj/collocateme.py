@@ -7,6 +7,7 @@ from collocateSim import collocateSim
 
 # Global variables in the script form
 sim_acronym = '0V2M1A1R'
+n = 1
 
 # Load the observational data
 basedir = '/work/bb1018/b380873/tropic_vis/obs/'
@@ -24,20 +25,20 @@ ICON = xr.open_dataset('/work/bb1018/b380873/model_output/ICON/ICON_3D_F10MIN_ic
 
 # Initiate the synthetic trajectory Dataset
 syn_traj = xr.Dataset( data_vars=dict(
-                            omega=( ["time"], np.zeros([tt, ], dtype=np.float32) ),
-                            temp=( ["time"], np.zeros([tt, ], dtype=np.float32) ),
-                            air_pressure=( ["time"], np.zeros([tt, ], dtype=np.float32) ),
-                            qv=( ["time"], np.zeros([tt, ], dtype=np.float32) ),
-                            qi=( ["time"], np.zeros([tt, ], dtype=np.float32) ),
-                            qc=( ["time"], np.zeros([tt, ], dtype=np.float32) ),
-                            qs=( ["time"], np.zeros([tt, ], dtype=np.float32) ),
-                            qg=( ["time"], np.zeros([tt, ], dtype=np.float32) ),
-                            clc=( ["time"], np.zeros([tt, ], dtype=np.float32) ),
-                            lat=( ["time"], np.zeros([tt, ], dtype=np.float64) ),
-                            lon=( ["time"], np.zeros([tt, ], dtype=np.float64) ),
-                            plev=( ["time"], np.zeros([tt, ], dtype=np.float64) ),
+                            omega=( ["time", "ntraj"], np.zeros([tt, n], dtype=np.float32) ),
+                            temp=( ["time", "ntraj"], np.zeros([tt, n], dtype=np.float32) ),
+                            air_pressure=( ["time", "ntraj"], np.zeros([tt, n], dtype=np.float32) ),
+                            qv=( ["time", "ntraj"], np.zeros([tt, n], dtype=np.float32) ),
+                            qi=( ["time", "ntraj"], np.zeros([tt, n], dtype=np.float32) ),
+                            qc=( ["time", "ntraj"], np.zeros([tt, n], dtype=np.float32) ),
+                            qs=( ["time", "ntraj"], np.zeros([tt, n], dtype=np.float32) ),
+                            qg=( ["time", "ntraj"], np.zeros([tt, n], dtype=np.float32) ),
+                            clc=( ["time", "ntraj"], np.zeros([tt, n], dtype=np.float32) ),
+                            lat=( ["time", "ntraj"], np.zeros([tt, n], dtype=np.float64) ),
+                            lon=( ["time", "ntraj"], np.zeros([tt, n], dtype=np.float64) ),
+                            alt=( ["time", "ntraj"], np.zeros([tt, n], dtype=np.float64) ),
                         ),
-                       coords=dict( time=[] ) #time=flight_times[j:]
+                       coords=dict( time=[], ntraj=np.arange(1, 2) ) #time=flight_times[j:]
                      )
 
 # Set the variable attributes as in the standard ICON output file.
@@ -63,10 +64,7 @@ for flight_iter, flight_time in enumerate(flight_times[j:]):
     flight_alt = Stratoclim['BEST:ALT'].sel(time=flight_time_not_np).values
 
     # Based on the flight values, load the relevant chunk of simulations
-    syn_traj = collocateSim(syn_traj, ICON, flight_time_not_np, flight_pressure, flight_lat, 
-                             flight_lon, flight_alt, sim_acronym)
+    syn_traj = collocateSim(syn_traj, ICON, flight_time_not_np, flight_pressure, flight_lat, flight_lon, flight_alt)
 
-print(syn_traj)
-print(np.nanmin(syn_traj['temp']),np.nanmean(syn_traj['temp']),np.nanmax(syn_traj['temp']))
-
+syn_traj.transpose("time", "ntraj")
 syn_traj.to_netcdf(path='/work/bb1018/b380873/model_output/ICON/ICON_synthetic_trajs_' + sim_acronym + '_collocate.nc')
