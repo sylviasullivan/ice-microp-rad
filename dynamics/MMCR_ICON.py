@@ -2,6 +2,7 @@ import numpy as np
 import xarray as xr
 import time, sys
 import matplotlib.pyplot as plt
+sys.path.append(os.path.abspath("/work/bb1018/b380873/tropic_vis/utilities/"))
 from z_from_ml import z_from_ml
 
 # Read in the Manus ARM site data for August between 1999 and 2010.
