@@ -73,16 +73,19 @@ traj/ - scripts to visualize the trajectory outputs
 - *traj_psd.py* - some utilities from Christian Rolf to smooth and calculate power spectral densities from trajectory output
 - *traj_vis.py* - visualize the trajectories colored by altitude over a land type-colored map
 - *psd_driver.py* - visualize the temperature and vertical velocity power spectral densities from trajectory output
+- *flighttrack.py* - three functions related to StratoClim data: (1) read in values, (2) bin them altitudinally, (3) retain only whole-second data
 
 traj/syntraj/ - scripts to work with synthetic trajectories from ICON high-time-resolution output
 - *collocateme.py* - driver for collocateSim to produce the trajectory with minimized Euclidean distance
 - *collocateSim.py* - find the ICON values with minimized Euclidean distance from the in-situ measurement
 - *extractme.py* - driver for extractSim to produce a series of synthetic trajectories in a spatiotemporal "bubble" around the in-situ measurement
 - *extractSim.py* - find a random subset of ICON values within a spatiotemporal "bubble" around the in-situ measurement to constitute synthetic trajectories
+- *pinpointme.py* - driver for pinpointSim to produce the trajectory with values closest to those measured along the flight track
+- *pinpointSim.py* - find the ICON values closest to those measured along the flight track
 - *statme_\*.py* - driver for the corresponding *syn_traj_stats_\*.npy* to calculate statistics in altitude bins along synthetic trajectories
-- *syn_traj_stats_\*.py* - calculate statistics in altitude bins along the synthetic trajectories (*thermo* - for qv, T, and P; *fixed* with the same element number per bin as the measurements)
+- *syntraj_stats_\*.py* - calculate statistics in altitude bins along the synthetic trajectories (*fixed* with the same element number per bin as the measurements)
 
-utilities 
+utilities/  
 - *convertTXTNC.py* - generate nc files from the grid description txt file
 - *KL_div.py* - calculate the Kullback-Leibler divergence between two distributions
 - *plotting_utilities.py* - series of functions to make nice axes, generate a color dictionary, open certain files, etc.
