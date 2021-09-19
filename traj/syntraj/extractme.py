@@ -6,7 +6,7 @@ import datetime
 from extractSim import extractSim
 
 # Global variables in the script form
-sim_acronym = '0V2M0A0R'
+sim_acronym = '0V1M0A0R'
 n = 5**4
 ll_interval = 0.75
 alt_interval = 1
@@ -70,4 +70,4 @@ for flight_iter, flight_time in enumerate(flight_times[j:]):
     # Based on the flight values, load the relevant chunk of simulations
     syn_traj = extractSim(syn_traj, ICON, flight_time_not_np, flight_pressure, flight_lat, flight_lon, flight_alt)
 
-syn_traj.to_netcdf(path='/work/bb1018/b380873/model_output/ICON/ICON_synthetic_trajs_' + sim_acronym + '_2.nc')
+syn_traj.to_netcdf(path='/work/bb1018/b380873/model_output/ICON/ICON_synthetic_trajs_' + sim_acronym + '_3.nc')

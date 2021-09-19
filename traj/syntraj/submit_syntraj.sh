@@ -9,4 +9,4 @@
 #SBATCH --time=02:30:00
 
 #source activate ncplot
-python pinpointme.py
+python extractme.py

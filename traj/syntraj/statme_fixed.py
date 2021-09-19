@@ -55,6 +55,10 @@ qi_ICON1 = syntraj1['qi'].sel( time=slice(time0, timef) ) * conv * 10**6
 qi_ICON2 = syntraj2['qi'].sel( time=slice(time0, timef) ) * conv * 10**6
 qi_ICON3 = syntraj3['qi'].sel( time=slice(time0, timef) ) * conv * 10**6
 
+qs_ICON1 = syntraj1['qs'].sel( time=slice(time0, timef) ) * conv * 10**6
+qs_ICON2 = syntraj2['qs'].sel( time=slice(time0, timef) ) * conv * 10**6
+qs_ICON3 = syntraj3['qs'].sel( time=slice(time0, timef) ) * conv * 10**6
+
 # Binning in altitude between <u> and <d> with <n> bins, which elements go in which bin?
 # np.digitize returns the indices of the bins to which each element in alt* belongs.
 # 3 sets of simulations, 1681 times, 625 trajectories
@@ -67,9 +71,9 @@ for i in np.arange(alt_ICON1.shape[1]):
     #idx[1,:,i] = np.digitize( alt_ICON2[:,i], bins=np.linspace(u,d,n) )
     #idx[2,:,i] = np.digitize( alt_ICON3[:,i], bins=np.linspace(u,d,n) )
 
-stats1_fixed = syntraj_stats_fixed( alt_ICON1, temp_ICON1, press_ICON1, qv_ICON1, qi_ICON1, idx[0], bins_sims )
+stats1_fixed = syntraj_stats_fixed( alt_ICON1, temp_ICON1, press_ICON1, qv_ICON1, qi_ICON1, qs_ICON1, idx[0], bins_sims )
 np.save('../../output/ICON_syntrajs_0V1M0A0R_stats' + tag + '_fixed.npy', stats1_fixed)
-stats2_fixed = syntraj_stats_fixed( alt_ICON2, temp_ICON2, press_ICON2, qv_ICON2, qi_ICON2, idx[1], bins_sims )
+stats2_fixed = syntraj_stats_fixed( alt_ICON2, temp_ICON2, press_ICON2, qv_ICON2, qi_ICON2, qs_ICON2, idx[1], bins_sims )
 np.save('../../output/ICON_syntrajs_0V2M0A0R_stats' + tag + '_fixed.npy', stats2_fixed)
-stats3_fixed = syntraj_stats_fixed( alt_ICON3, temp_ICON3, press_ICON3, qv_ICON3, qi_ICON3, idx[2], bins_sims )
+stats3_fixed = syntraj_stats_fixed( alt_ICON3, temp_ICON3, press_ICON3, qv_ICON3, qi_ICON3, qs_ICON3, idx[2], bins_sims )
 np.save('../../output/ICON_syntrajs_0V2M1A1R_stats' + tag + '_fixed.npy', stats3_fixed)

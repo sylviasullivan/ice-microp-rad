@@ -26,6 +26,7 @@ basedir = '/work/bb1018/b380873/model_output/ICON/'
 tag = ''  # Default 625 synthetic trajectories
 #tag = '_fixed' # Fix the number of elements per bin to that of the in-situ measurements
 #tag = '_2' # Second set of 625 synthetic trajectories to test reproducibility
+#tag = '_3' # Third set of 625 synthetic trajectories to test reproducibility
 #tag = '_collocate' # Minimize the Euclidean distance between sim and obs values
 #tag = '_pinpoint' # Find the closest numerical value to the obs within the sim
 
@@ -58,6 +59,11 @@ qi_ICON1 = syntraj1['qi'].sel( time=slice(time0, timef) ) * conv * 10**6
 qi_ICON2 = syntraj2['qi'].sel( time=slice(time0, timef) ) * conv * 10**6
 qi_ICON3 = syntraj3['qi'].sel( time=slice(time0, timef) ) * conv * 10**6
 
+qs_ICON1 = syntraj1['qs'].sel( time=slice(time0, timef) ) * conv * 10**6
+qs_ICON2 = syntraj2['qs'].sel( time=slice(time0, timef) ) * conv * 10**6
+qs_ICON3 = syntraj3['qs'].sel( time=slice(time0, timef) ) * conv * 10**6
+
+
 # Binning in altitude between <u> and <d> with <n> bins, which elements go in which bin?
 # np.digitize returns the indices of the bins to which each element in alt* belongs.
 # 3 sets of simulations, 1681 times, 625 trajectories
@@ -71,9 +77,9 @@ for i in np.arange(alt_ICON1.shape[1]):
     #idx[1,:,i] = np.digitize( alt_ICON2[:,i], bins=np.linspace(u,d,n) )
     #idx[2,:,i] = np.digitize( alt_ICON3[:,i], bins=np.linspace(u,d,n) )
 
-stats1 = syntraj_stats( alt_ICON1, temp_ICON1, press_ICON1, qv_ICON1, qi_ICON1, idx[0], bins_sims )
-np.save('../../output/ICON_syntrajs_0V1M0A0R_stats' + tag + '_full.npy', stats1)
-stats2 = syntraj_stats( alt_ICON2, temp_ICON2, press_ICON2, qv_ICON2, qi_ICON2, idx[1], bins_sims )
-np.save('../../output/ICON_syntrajs_0V2M0A0R_stats' + tag + '_full.npy', stats2)
-stats3 = syntraj_stats( alt_ICON3, temp_ICON3, press_ICON3, qv_ICON3, qi_ICON3, idx[2], bins_sims )
-np.save('../../output/ICON_syntrajs_0V2M1A1R_stats' + tag + '_full.npy', stats3)
+#stats1 = syntraj_stats( alt_ICON1, temp_ICON1, press_ICON1, qv_ICON1, qi_ICON1, qs_ICON1, idx[0], bins_sims )
+#np.save('../../output/ICON_syntrajs_0V1M0A0R_stats_full' + tag + '.npy', stats1)  # _full
+#stats2 = syntraj_stats( alt_ICON2, temp_ICON2, press_ICON2, qv_ICON2, qi_ICON2, qs_ICON2, idx[1], bins_sims )
+#np.save('../../output/ICON_syntrajs_0V2M0A0R_stats_full' + tag + '.npy', stats2)  # _full
+stats3 = syntraj_stats( alt_ICON3, temp_ICON3, press_ICON3, qv_ICON3, qi_ICON3, qs_ICON3, idx[2], bins_sims )
+np.save('../../output/ICON_syntrajs_0V2M1A1R_stats_full' + tag + '.npy', stats3)  # _full

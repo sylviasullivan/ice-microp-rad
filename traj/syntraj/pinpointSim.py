@@ -40,7 +40,7 @@ def pinpointSim(syn_traj, var_ICON, flight_time, Stratoclim_vals, sim_acronym):
                              lat=slice(flight_lat-ll_interval, flight_lat+ll_interval),
                              lon=slice(flight_lon-ll_interval, flight_lon+ll_interval) )
 
-    mini_traj = xr.Dataset( data_vars=dict( 
+    mini_traj = xr.Dataset( data_vars=dict(
                             temp=( ["time", "ntraj"], np.empty([1,1]) ),
                             air_pressure=( ["time", "ntraj"], np.empty([1,1]) ),
                             qv=( ["time", "ntraj"], np.empty([1,1]) ),
