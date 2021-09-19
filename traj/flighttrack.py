@@ -49,6 +49,8 @@ def bin_flighttrack( min_alt, max_alt, alt1, qv_flash, qv_fish, alt2, qi, alt3, 
     import xarray as xr
     import numpy as np
 
+    basedir = '/work/bb1018/b380873/tropic_vis/'
+
     # Define the simulation bins from the vertical grid file
     vgrid = xr.open_dataset('/work/bb1018/b380873/vgrid_icon-grid_tropic_55e115e5s40n.nc')
     alt = vgrid.vct_a.values[:,0]
@@ -120,6 +122,35 @@ def bin_flighttrack( min_alt, max_alt, alt1, qv_flash, qv_fish, alt2, qi, alt3, 
     RHi_SC_stats = np.empty((3, icon_n))
     RHi_SC_stats[:] = np.nan
 
+    ## This chunk of code is generally commented out as we only need to save
+    ## the number of elements in a bin from the in-situ measurements once
+    ## These number of elements are used in syn_traj_stats_fixed
+    #temp_len = []
+    #qv_flash_len = []
+    #qi_len = []
+    #theta_len = []
+    #rhi_len = []
+    #for i in np.arange(icon_n):
+    #    temp_len.append( int(len(temp_list[i])) )
+    #    qv_flash_len.append( int(len(qv_flash_list[i])) )
+    #    qi_len.append( int(len(qi_list[i])) )
+    #    theta_len.append( int(len(theta_list[i])) )
+    #    rhi_len.append( int(len(RHi_list[i])) )
+    #
+    ## The whole second set of trajectories (z ~ 22 km) are piled into the last bin.
+    ## Remove this bin as we're interested in the vertical profile lower down.
+    #temp_len[-1] = 0
+    #qv_flash_len[-1] = 0
+    #qi_len[-1] = 0
+    #theta_len[-1] = 0
+    #rhi_len[-1] = 0
+    #np.save( basedir + 'output/Stratoclim_temp_len.npy', np.asarray(temp_len, dtype='i4') )
+    #np.save( basedir + 'output/Stratoclim_qv_len.npy', np.asarray(qv_len, dtype='i4') )
+    #np.save( basedir + 'output/Stratoclim_qi_len.npy', np.asarray(qi_len, dtype='i4') )
+    #np.save( basedir + 'output/Stratoclim_theta_len.npy', np.asarray(theta_len, dtype='i4') )
+    #np.save( basedir + 'output/Stratoclim_rhi_len.npy', np.asarray(rhi_len, dtype='i4') )
+    ##
+
     for i in np.arange(icon_n):
         if (len(temp_list[i]) > 5):
             temp_SC_stats[0,i] = np.nanmean( temp_list[i] )
@@ -149,7 +180,7 @@ def bin_flighttrack( min_alt, max_alt, alt1, qv_flash, qv_fish, alt2, qi, alt3, 
 
 
 # Utility function to retain only the whole-second measurements in the StratoClim data.
-def trimDataTime:
+def trimDataTime():
     from netCDF4 import num2date, Dataset
     import xarray as xr
     import matplotlib.pyplot as plt
@@ -171,3 +202,4 @@ def trimDataTime:
     for v in Stratoclim.variables:
         Stratoclim2[v] = Stratoclim[v].isel(time=indx)
     Stratoclim2.to_netcdf(basedir + 'stratoclim2017.geophysika.0808_1.filtered_per_sec.nc')
+
