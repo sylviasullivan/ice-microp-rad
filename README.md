@@ -1,9 +1,13 @@
 # icon_2.3.0_ice-mp_rad_vis
-This repository contains a variety of python scripts to visualize, regrid, and analyze ICON v 2.3.0 model output from a limited-area domain simulation. The project goals center on the interaction of ice microphysics with radiation (ice-mp_rad). Scripts are grouped into those that visualize the domain, dynamical fields, ice / cloud hydrometeor fields, cloud optics values, radiative values, and trajectories. There are also remapping and utility directories.
+This repository contains a variety of Python scripts to visualize, regrid, and analyze ICON v 2.3.0 model output from limited-area domain and trajectory simulations. The project focuses on the interaction of ice microphysics with radiation (ice-mp_rad). Scripts are grouped into those that visualize the domain, dynamical fields, ice / cloud hydrometeor fields, cloud optics values, radiative values, and trajectories. There are also remapping and utility directories.
 
-*Figures_article1.ipynb*, *SI_article1.ipynb* - iPython notebooks that pull from the functions below to generate the 4 main and 5 supplemental figures of the Communications Earth & Environment publication
+*Figures_article1.ipynb*, *SI_article1.ipynb* - iPython notebooks that pull from the functions below to generate the 4 main and 5 supplemental figures of the [Communications Earth & Environment publication]{https://www.nature.com/articles/s43247-021-00206-7}
 
 *Figures_article2.ipynb*, *SI_article2.ipynb* - iPython notebooks that pull from the functions below to generate figures for a publication on the trajectories in ICON and CLaMS
+
+*Postprocessing1_article2.ipynb*, *Postprocessing2_article2.ipynb* - iPython notebooks that calculate probability distributions from the CLaMS and ICON trajectory output. Postprocessing1 combines all trajectory files and calculates PDFs of cloud ice mass and number, also versus temperature and RHi. Postprocessing2 digitizes and saves ICON-CLaMS differences in cloud ice mass and number along either an absolute or normalized time axis.
+
+*Analysis1_article2.ipynb*, *Analysis2_article2.ipynb* - iPython notebooks that act as workspaces to refine figures prior to Figures_article2. Analysis1_article2 works with StratoClim measurements and ICON synthetic flight tracks. Analysis2_article2 works with differences between ICON and CLaMS trajectory output.
 
 CloudSat/ - scripts to visualize the 2CICE ice water content (IWC) product, derived from CloudSat overpasses, with the ICON output IWC
 - *2CICE_ZL.py* - generate altitude-lat/lon swathes of 2CICE and ICON IWC 
@@ -64,14 +68,17 @@ remapping/ - scripts to perform vertical or horizontal remapping
 - *submit_remapcon.sh, submit_remapdis.sh* - slurm script to perform variable-conserving or distance-weighted remapping 
 
 traj/ - scripts to visualize the trajectory outputs
+- *CLaMS-negRHi-exploration.ipynb* - visualizes time series of CLaMS RHi versus various cloud variables along the ICON or CLaMS trajectories to understand the negative RHi values produced when using the SH_mix tendency
+- *diff_abs_lifetime.py*, *diff_norm_lifetime.py* - calculate and save the ICON-CLaMS difference in qi or Ni versus a digitized absolute or normalized time
+- *flighttrack.py* - three functions related to StratoClim data: (1) read in values, (2) bin them altitudinally, (3) retain only whole-second data
+- *icetraj.py* - functions in a preliminary attempt to extract and filter qi, Ni, T, and RHi along trajectories (replaced by Postprocessing1_article2.ipynb); includes visualization of the T-IWC climatology and T-Ni-ri percentiles from Martina Krämer
+- *psd_driver.py* - visualize the temperature and vertical velocity power spectral densities from trajectory output
 - *lagranto_vis.py* - attempt to use the lagranto.plotting package
 - *t_pdf.py* - PDF of temperature and updraft fluctuations along the ICON trajectories
 - *total_water.ipynb* - one-to-one or relative difference plots of total water (qv+qi) in ICON versus CLaMS-ice simulations
 - *traj_nc.py* - trajectory file postprocessing script
 - *traj_psd.py* - some utilities from Christian Rolf to smooth and calculate power spectral densities from trajectory output
 - *traj_vis.py* - visualize the trajectories colored by altitude over a land type-colored map
-- *psd_driver.py* - visualize the temperature and vertical velocity power spectral densities from trajectory output
-- *flighttrack.py* - three functions related to StratoClim data: (1) read in values, (2) bin them altitudinally, (3) retain only whole-second data
 
 traj/syntraj/ - scripts to work with synthetic trajectories from ICON high-time-resolution output
 - *collocateme.py* - driver for collocateSim to produce the trajectory with minimized Euclidean distance
@@ -85,6 +92,7 @@ traj/syntraj/ - scripts to work with synthetic trajectories from ICON high-time-
 
 utilities/  
 - *convertTXTNC.py* - generate nc files from the grid description txt file
+- *densityPlot.py* - two functions to automatize plotting of 2D density for qi/Ni versus T/RHi and store means and medians of these variables
 - *KL_div.py* - calculate the Kullback-Leibler divergence between two distributions
 - *plotting_utilities.py* - series of functions to make nice axes, generate a color dictionary, open certain files, etc.
 - *thermodynamic_functions.py* - calculate saturation vapor pressure, potential temperature, RH, etc.
