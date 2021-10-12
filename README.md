@@ -1,5 +1,5 @@
-# icon_2.3.0_ice-mp_rad_vis
-This repository contains a variety of Python scripts to visualize, regrid, and analyze ICON v 2.3.0 model output from limited-area domain and trajectory simulations. The project focuses on the interaction of ice microphysics with radiation (ice-mp_rad). Scripts are grouped into those that visualize the domain, dynamical fields, ice / cloud hydrometeor fields, cloud optics values, radiative values, and trajectories. There are also remapping and utility directories.
+# ice-microp-rad
+This repository contains a variety of Python scripts to visualize, regrid, and analyze ICON v 2.3.0 model output from limited-area domain and trajectory simulations. The project focuses on the interaction of ice microphysics with radiation. Scripts are grouped into those that visualize the domain, dynamical fields, ice / cloud hydrometeor fields, cloud optics values, radiative values, and trajectories. There are also remapping and utility directories.
 
 *Figures_article1.ipynb*, *SI_article1.ipynb* - iPython notebooks that pull from the functions below to generate the 4 main and 5 supplemental figures of the [Communications Earth & Environment publication]{https://www.nature.com/articles/s43247-021-00206-7}
 
