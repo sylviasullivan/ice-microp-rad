@@ -73,19 +73,23 @@ def sexy_axes2(ax, fs, ylab):
 
 # Define a function to convert radians to degrees.
 def rad2deg(x):
-    return x*180/pi
+    import numpy as np
+    return x*180/np.pi
 
 
 # More helper functions
 # Pulling this from the following stackoverflow
 # https://stackoverflow.com/questions/30030328/correct-placement-of-colorbar-relative-to-geo-axes-cartopy
 def resize_colorbar(event):
+    #ax = plt.gca()
+    #fig = plt.gcf()
+    #cbar_ax = fig.add_axes([0, 0, 0.1, 0.1])
     plt.draw()
     posn = ax.get_position()
     # left, bottom, width, height
     cbar_ax.set_position([posn.x0 + posn.width + 0.01, posn.y0 - 0.018,
                           0.025, posn.height + 0.03])
-    cbar_ax.tick_params(labelsize=fs)
+    #cbar_ax.tick_params(labelsize=fs)
 
 
 # A solution to plot seaborn jointplots in different subplots of a matplotlib fig

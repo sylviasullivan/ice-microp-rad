@@ -33,6 +33,28 @@ def satVapP_ice(t_in):
     return psatI
 
 
+# Function to calculate the saturation water vapor mixing ratio wrt ice.
+# t_in [=] [K] and qv [kg kg-1]
+def satMR_ice(t_in):
+    R = 8.314             # J mol-1 K-1
+    MWw = 18.015/1000     # kg mol-1
+    rhoa = 1.395
+    a1 = 54.842763
+    a2 = -6763.22
+    a3 = -4.21
+    a4 = 0.000367
+    a5 = 0.0415
+    a6 = 218.8
+    a7 = 53.878
+    a8 = -1331.22
+    a9 = -9.44523
+    a10 = 0.014025
+    factor = a7 + a8/t_in + a9*np.log(t_in) + a10*t_in
+    satVapP = a1 + a2/t_in + a3*np.log(t_in) + a4*t_in + np.arctan(a5*(t_in - a6))*factor
+    satVapP = np.exp(satVapP)
+    qvsati = satVapP/(R/MWw*t_in)
+    return qvsati
+
 # Function to calculate the potential temperature
 # t_in [=] K, p_in [=] Pa
 def calc_theta(t_in, p_in):
@@ -69,3 +91,27 @@ def running_mean2(x, N, a):
         return np.swapaxes(smooth, a, 0)
     else:
         return (cumsum[N:] - cumsum[:-N]) / float(N)
+
+# Function for heat of sublimation, Rogers and Yau Ch2
+# T [=] K, Li [=] J kg-1
+def heatSub(T):
+    a1 = 2834.1
+    a2 = 0.29
+    a3 = 0.004
+    Tc = T - 273
+    Ls = a1 - a2*Tc - a3*Tc**2
+    Ls = Ls*10**3
+    return Ls
+
+# Function for thermal conductivity of air, Kannuluik and Carman '51
+# T [=] K, k [=] W m-1 K-1
+def kAir(T):
+    Tc = T - 273;
+    a1 = 4.184*100
+    a2 = 5.75*10**(-5)
+    a3 = 0.00317
+    a4 = 0.0000021
+
+    k = a2*(1 + a3*Tc - a4*Tc**2)
+    k = a1*k
+    return k

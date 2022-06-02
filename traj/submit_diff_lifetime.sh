@@ -1,11 +1,17 @@
-#!/bin/ksh
-#SBATCH --account=bb1018
-#SBATCH --job-name=Ni_norm_lt
-#SBATCH --partition=compute2
-#SBATCH --mem=12gb
+#!/bin/bash
+#SBATCH --account=sylvia
+#SBATCH --job-name=qia_1M
+#SBATCH --partition=high_priority
+#SBATCH --qos=user_qos_sylvia
+#SBATCH --mem=50gb
 #SBATCH --nodes=1
-#SBATCH --output=/work/bb1018/b380873/tropic_vis/traj/LOG_Ni_norm_lt.%j.o
-#SBATCH --error=/work/bb1018/b380873/tropic_vis/traj/LOG_Ni_norm_lt.%j.o
+#SBATCH --ntasks=2
+#SBATCH --output=/xdisk/sylvia/tropic_vis/traj/LOG_qi_abs_1M.%j.o
+#SBATCH --error=/xdisk/sylvia/tropic_vis/traj/LOG_qi_abs_1M.%j.o
 #SBATCH --time=08:00:00
 
-python diff_norm_lifetime.py
+module load anaconda/2020
+source ~/.bashrc
+conda activate ncplot
+#python diff_norm_lifetime.py
+python diff_abs_lifetime.py
