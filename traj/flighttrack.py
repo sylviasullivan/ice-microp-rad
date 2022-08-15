@@ -6,7 +6,8 @@ def read_flighttrack( time0, timef ):
     # Read in-situ data
     # In-situ not filtered for whole-second values
     #daten = xr.open_dataset('obs/stratoclim2017.geophysika.0808_1.master.ci_eval.nc')
-    daten = xr.open_dataset('obs/stratoclim2017.geophysika.0808_1.filtered_per_sec.nc')
+    bd = '/xdisk/sylvia/tropic_vis/'
+    daten = xr.open_dataset( bd + 'obs/stratoclim2017.geophysika.0808_1.filtered_per_sec.nc' )
 
     # Extract values between time0 and timef
     zeit = daten['time'].sel( time=slice(time0, timef) )
@@ -49,10 +50,10 @@ def bin_flighttrack( min_alt, max_alt, alt1, qv_flash, qv_fish, alt2, qi, alt3, 
     import xarray as xr
     import numpy as np
 
-    basedir = '/work/bb1018/b380873/tropic_vis/'
+    basedir = '/xdisk/sylvia/'
 
     # Define the simulation bins from the vertical grid file
-    vgrid = xr.open_dataset('/work/bb1018/b380873/vgrid_icon-grid_tropic_55e115e5s40n.nc')
+    vgrid = xr.open_dataset(basedir + 'vgrid_icon-grid_tropic_55e115e5s40n.nc')
     alt = vgrid.vct_a.values[:,0]
     j = np.argwhere( (alt >= min_alt) & (alt <= max_alt) )
     bins_sims = alt[j[:,0]]
@@ -186,7 +187,7 @@ def trimDataTime():
     import matplotlib.pyplot as plt
     import sys, time
 
-    basedir = '/work/bb1018/b380873/tropic_vis/obs/'
+    basedir = '/xdisk/sylvia/tropic_vis/obs/'
     fi = basedir + 'stratoclim2017.geophysika.0808_1.master.ci_eval.nc'
     Stratoclim = Dataset(fi, 'r+')
 

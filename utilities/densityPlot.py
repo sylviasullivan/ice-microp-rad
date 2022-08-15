@@ -15,7 +15,9 @@ def densityPlot( datasets, histvals, xvar, xmin, xmax, yvar, tiwc_line=False,
     from plotting_utilities import sexy_axes
     #sys.path.append(os.path.abspath("/work/bb1018/b380873/tropic_vis/traj/"))
     sys.path.append(os.path.abspath("/xdisk/sylvia/tropic_vis/traj/"))
+    sys.path.append(os.path.abspath("/xdisk/sylvia/tropic_vis/utilities/"))
     from icetraj import martina_T_IWC_line, martina_T_qi_perc_tropics
+    from plotting_utilities import confidence_ellipse
 
     fs = 15
     ymin = -3

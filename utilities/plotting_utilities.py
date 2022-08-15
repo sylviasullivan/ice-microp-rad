@@ -98,6 +98,7 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import seaborn as sns
 import numpy as np
+import xarray as xr
 
 class SeabornFig2Grid():
 
@@ -219,3 +220,91 @@ def customized_box_plot(percentiles, axes, n_box, pos, redraw = True, *args, **k
         axes.figure.canvas.draw()
 
     return box_plot
+
+def confidence_ellipse(x, y, n_std=0.1, facecolor='none', **kwargs):
+    """
+    Create a plot of the covariance confidence ellipse of *x* and *y*.
+
+    Parameters
+    ----------
+    x, y : array-like, shape (n, )
+        Input data.
+
+    ax : matplotlib.axes.Axes
+        The axes object to draw the ellipse into.
+
+    n_std : float
+        The number of standard deviations to determine the ellipse's radiuses.
+
+    **kwargs
+        Forwarded to `~matplotlib.patches.Ellipse`
+
+    Returns
+    -------
+    matplotlib.patches.Ellipse
+    """
+    from matplotlib.patches import Ellipse
+
+    if x.size != y.size:
+        raise ValueError("x and y must be the same size")
+
+    cov = np.cov(x, y)
+    pearson = cov[0, 1]/np.sqrt(cov[0, 0] * cov[1, 1])
+    # Using a special case to obtain the eigenvalues of this
+    # two-dimensional dataset.
+    ell_radius_x = np.sqrt(1 + pearson)
+    ell_radius_y = np.sqrt(1 - pearson)
+    ellipse = Ellipse((0, 0), width=ell_radius_x * 2, height=ell_radius_y * 2,
+                      facecolor=facecolor, **kwargs)
+
+    # Calculating the standard deviation of x from
+    # the square root of the variance and multiplying
+    # with the given number of standard deviations.
+    scale_x = np.sqrt(cov[0, 0]) * n_std
+    mean_x = np.mean(x)
+    print('Ellipse major axis: ' + str(mean_x+scale_x-mean_x+scale_x) + ' K')
+    print('Min x value of major axis: ' + str(mean_x-scale_x) + ' K')
+    print('Max x value of major axis: ' + str(mean_x+scale_x) + ' K')
+    min_majoraxis = mean_x - scale_x
+    max_majoraxis = mean_x + scale_x
+
+    # calculating the standard deviation of y ...
+    #scale_y = np.sqrt(cov[1, 1]) * n_std
+    #mean_y = np.mean(y)
+
+    #transf = transforms.Affine2D() \
+    #    .rotate_deg(45) \
+    #    .scale(scale_x, scale_y) \
+    #    .translate(mean_x, mean_y)
+
+    #ellipse.set_transform(transf + ax.transData)
+    return min_majoraxis, max_majoraxis  #ax.add_patch(ellipse), 
+
+
+# Perform the quadratic qi(T) fitting for the longwave heating scaling
+def qiT_fitting( infile, k ):
+    bd = '/xdisk/sylvia/traj_output/'
+    file = xr.open_dataset( bd + infile )
+    T = np.array(file['T'][:k]).ravel()
+    IWC = np.array(file['qi'][:k]).ravel()
+    
+    # Filter these values for non-nan, non-negligible ice water contents
+    i = np.argwhere( ~np.isnan(IWC) )
+    T = T[i[:,0]]
+    IWC = IWC[i[:,0]] * 10**6
+    j = np.argwhere( (IWC > 10**(-5)) )
+    T = T[j[:,0]]
+    IWC = IWC[j[:,0]]
+    
+    # Find the minimum and maximum temperature from the 0.5*sigma ellipse
+    minT, maxT = confidence_ellipse( T, np.log10(IWC) )
+    
+    # Then filter values for temperatures in teh 0.5*sigma ellipse
+    j = np.argwhere( (T > minT) & (T < maxT) )
+    T = T[j[:,0]]
+    IWC = IWC[j[:,0]]
+    print( 'Sample size: ' + str(len(IWC)) )
+    
+    # Curve fit
+    z = np.polyfit( T, IWC, 2 )
+    return z, minT, maxT
