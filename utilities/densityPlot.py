@@ -26,7 +26,10 @@ def densityPlot( datasets, raw, histvals, xvar, xmin, xmax, yvar, tiwc_line=Fals
     ymin = -3
     ymax = 3.5
     alf = 0.5
+    # 20220810_sylvia I believe that these values were calculated within utilities/plotting_utilities.py: confidence_ellipse
+    # so the same would need to be done for qiRHi_covariances
     qiT_covariances = [ 19.994, -6.074, 16.576, -41.505 ]
+    qiRHi_covariances = [ 1.777, 48.219, -1.8895, 259.9308 ]
 
     fig, ax = plt.subplots( nrows=2, ncols=2, figsize=(13,5.5) )
     lbl = [ r"$\bf{(a)}$ $\bf{C}$_1M1T1S", r'$\bf{(b)}$ $\bf{I}$_1M0T0S',
@@ -72,7 +75,10 @@ def densityPlot( datasets, raw, histvals, xvar, xmin, xmax, yvar, tiwc_line=Fals
            ym, _, ys, xm, _, xs = centroids( histvals, j )
            # First and third outputs are means. Second and fourth are medians.
            a.scatter( xm, np.log10(ym), marker='x', color='k', s=70, zorder=10 )
-           cov = qiT_covariances[j]
+           if 'T' in histvals:
+              cov = qiT_covariances[j]
+           else:
+              cov = qiRHi_covariances[j]
            _, _, e = stdev_bubble( xm, ym, xs, ys, cov, n_std=0.5 ) 
            a.add_patch( e )
            e.set_edgecolor( 'r' )
@@ -258,8 +264,9 @@ def centroids( histvals, sim_tag ):
     qiRHi_mean = [ [17.64, 10.03, 39.57, 21.36, np.nan, np.nan], [98.66, 88.89, 100.07, 81.17, np.nan, np.nan] ]
     qiRHi_med = [ [2.18, 1.27, 7.50, 0.064, np.nan, np.nan], [98.12, 95.24, 99.43, 81.8, np.nan, np.nan] ]
 
-    qiRHi_outflow_mean = [ [15.89, 10.16, 37.72, 22.3, np.nan, np.nan], [98.75, 92.55, 100.15, 88.05, np.nan, np.nan] ]
+    qiRHi_outflow_mean = [ [25.89, 18.16, 60.68, 30.55, np.nan, np.nan], [98.75, 96.55, 100.15, 97.05, np.nan, np.nan] ] #15.89, 10.16, 37.72, 22.3? 88.05?
     qiRHi_outflow_med = [ [2.033, 2.16, 7.32, 1.18, np.nan, np.nan], [98.08, 96.44, 99.40, 91.94, np.nan, np.nan] ]
+    qiRHi_outflow_std = [ [63.35, 26.98, 125.47, 84.43, np.nan, np.nan], [15.33, 9.48, 13.91, 13.98, np.nan, np.nan] ]
 
     qiRHi_insitu_mean = [ [46.4, 0.0105, 46.09, 0.436, np.nan, np.nan], [95.27, 53.24, 97.55, 33.63, np.nan, np.nan] ]
     qiRHi_insitu_med = [ [33.5, 0.00134, 6.43, 0.000416, np.nan, np.nan], [95.21, 51.4, 98.77, 29.34, np.nan, np.nan] ]
@@ -293,7 +300,8 @@ def centroids( histvals, sim_tag ):
        'qiTh_flight': [qiT_flight_mean[0][s], qiT_flight_med[0][s], qiT_flight_std[0][s],\
                        qiT_flight_mean[1][s], qiT_flight_med[1][s], qiT_flight_std[1][s]],
        'qiRHih': [qiRHi_mean[0][s], qiRHi_med[0][s], qiRHi_mean[1][s], qiRHi_med[1][s], ],
-       'qiRHih_outflow': [qiRHi_outflow_mean[0][s], qiRHi_outflow_med[0][s], qiRHi_outflow_mean[1][s], qiRHi_outflow_med[1][s]],
+       'qiRHih_outflow': [qiRHi_outflow_mean[0][s], qiRHi_outflow_med[0][s], qiRHi_outflow_std[0][s],\
+                          qiRHi_outflow_mean[1][s], qiRHi_outflow_med[1][s], qiRHi_outflow_std[1][s]],
        'qiRHih_insitu': [qiRHi_insitu_mean[0][s], qiRHi_insitu_med[0][s], qiRHi_insitu_mean[1][s], qiRHi_insitu_med[1][s]],
        'qiRHih_flight': [qiRHi_flight_mean[0][s], qiRHi_flight_med[0][s], qiRHi_flight_mean[1][s], qiRHi_flight_med[1][s]],
        'NiTh': [Ni_mean[s], Ni_med[s], T_mean[s], T_med[s]],
