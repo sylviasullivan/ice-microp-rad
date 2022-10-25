@@ -288,7 +288,7 @@ def confidence_ellipse(x, y, n_std, facecolor='none', **kwargs):
         .translate(xmean, ymean)
 
     print(transf)
-    ellipse.set_transform(transf + ax.transData)
+    #ellipse.set_transform(transf + ax.transData)
     return ellipse, min_majoraxis, max_majoraxis
 
 
